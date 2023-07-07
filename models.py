@@ -1,6 +1,7 @@
 import random
 import datetime
 
+
 class Player:
     def __init__(
         self,
@@ -24,6 +25,19 @@ class Player:
 
     def __str__(self):
         return f"Player {self.first_name} {self.name} ranking is {self.rank} with {self.final_score} points."
+
+    def player_data_to_json(self):
+        player_json_data = {
+            "first_name": self.first_name,
+            "name": self.name,
+            "birthdate": self.birthdate,
+            "chess_national_identifier": self.ine, 
+            "tournament_score": self.tournament_score, 
+            "final_score": self.final_score, 
+            "rank": self.rank, 
+            "met_competitors" : self.met_competitors
+        }
+        return player_json_data
 
 
 class Match:
@@ -79,7 +93,7 @@ class Match:
 
 
 class Round:
-    def __init__(self, name:str, pair_players: list):
+    def __init__(self, name: str, pair_players: list):
         """Initialise les informations d'un round."""
         self.name = name
         self.pair_players = pair_players
@@ -89,13 +103,13 @@ class Round:
 
     def get_time_now(self):
         return datetime.datetime.now().strftime("%d %B %Y at %Hh%M")
-    
+
     def create_match(self) -> list[Match]:
         matchs = []
         for index, pair in enumerate(self.pair_players):
             matchs.append(Match(name=f"Match {index}", pair_players=pair))
         return matchs
-    
+
     def get_round_results(self):
         print("Round over! Please enter match results.")
         self.end_time = self.get_time_now
@@ -107,37 +121,40 @@ class Round:
         return self.name
 
 
-class Tournament():
-    def __init__(self, name:str, place:str, players:list, number_of_rounds=4, description=""):
+class Tournament:
+    def __init__(
+        self, name: str, place: str, players: list, number_of_rounds=4, description=""
+    ):
         self.name = name
         self.place = place
         self.players = players
         self.start_time = self.get_time_now
         self.end_time = ""
-        self.number_of_rounds = number_of_rounds 
+        self.number_of_rounds = number_of_rounds
         self.round_list = []
         self.description = description
 
-    
     def get_time_now(self):
         return datetime.datetime.now().strftime("%d %B %Y at %Hh%M")
-    
+
     def __str__(self):
         return self.name
-    
+
     def create_rounds(self, round_number):
-            pair_players = self.assign_players_pairs(current_round=round_number)            
-            round = Round("Round " + str(round_number), pair_players)
-            self.round_list.append(round)
-    
+        pair_players = self.assign_players_pairs(current_round=round_number)
+        round = Round("Round " + str(round_number), pair_players)
+        self.round_list.append(round)
+
     def assign_players_pairs(self, current_round_number):
         # First Round, players are shuffled randomly
         if current_round_number == 0:
             sorted_players = random.shuffle(self.players)
         # Other rounds, players are sorted by their scores
         else:
-            sorted_players = sorted(self.players, key=lambda player: player.final_score, reverse=True)
+            sorted_players = sorted(
+                self.players, key=lambda player: player.final_score, reverse=True
+            )
 
             # If 2 final_scores are equal, assign competitors that haven't played together
             # for player in sorted_players:
-            #     if player.final_score == 
+            #     if player.final_score ==
