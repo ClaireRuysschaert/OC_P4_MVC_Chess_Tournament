@@ -6,6 +6,8 @@ sys.path.insert(0, project_path)
 
 from views.player import get_new_player_info
 from controllers.player import create_player 
+from views.match import get_new_match_info
+from controllers.match import create_match
 
 def main_menu_display() -> None:
     """First users entry point where all the functionalities are listed."""
@@ -17,6 +19,8 @@ def main_menu_display() -> None:
                         "3 - Créer des joueurs\n"
                         "4 - Afficher les rapports\n"
                         "5 - Jouer un tournoi\n"
+                        "6 - Créer un match\n"
+                        "7 - Jouer un match\n"
                         "q - Quitter\n> ")
     
         # 1 - Créer un tournoi
@@ -32,9 +36,7 @@ def main_menu_display() -> None:
             user_input = input("Entrez le nombre de joueurs à créer\n")
             
             for _ in range(int(user_input)):
-                # display menu pour créer des joueurs
                 player_info = get_new_player_info()
-                # créer joueurs et sauvegarde dans la db
                 create_player(player_info) 
                 
         
@@ -48,6 +50,17 @@ def main_menu_display() -> None:
         if user_input == "5":
             print("Créer un tournoi avec un controller.")
         
+        # 6 - Créer un match
+        if user_input == "6":
+            match_infos = get_new_match_info()
+            create_match(match_infos)
+            
+        # 7 - Jouer un match
+        if user_input == "7":
+            pass
+            # couleur
+            # récup résultats    
+            
         # Quitter
         else:
             quit()
