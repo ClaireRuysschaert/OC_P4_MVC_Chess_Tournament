@@ -11,7 +11,7 @@ def get_new_player_info() -> Dict[str, int|str]:
 
     chess_national_identifier = input("""Identifiant national d'échecs:\n> """)
 
-    print(f"Joueur {first_name} {name} créé.")
+    print(f"{first_name} {name} a été ajouté(e) aux joueurs créés.")
 
     return {
         "first_name": first_name,

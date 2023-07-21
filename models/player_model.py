@@ -1,7 +1,6 @@
 import os
 from typing import Dict
-from tinydb import TinyDB
-
+from data.database import player_database
 class Player:
     
     players = []
@@ -29,7 +28,7 @@ class Player:
     def __str__(self):
         return f"Player {self.first_name} {self.name} ranking is {self.rank} with {self.final_score} points."
 
-    def player_data_to_json(self) -> Dict[str:str|int]:
+    def player_data_to_json(self) -> Dict[str, str|int]:
         """Return player informations in dict/json format."""
         player_json_format = {
             "first_name": self.first_name,
@@ -48,10 +47,7 @@ class Player:
         """Create the new player to the database.
         These informations are saved in players_data.json in data folder."""
         
-        ROOT_FOLDER_NAME = "data"
-        root_folder_path = os.path.join(os.getcwd(), ROOT_FOLDER_NAME)
-        if not os.path.isdir(root_folder_path):
+        root_folder_path = os.path.join(os.getcwd(), "data")
+        if not os.path.isdir(root_folder_path): 
             os.mkdir(root_folder_path)
-
-        db = TinyDB(os.path.join(ROOT_FOLDER_NAME, "players_data.json"))
-        db.insert(player_json_format)
+        player_database.insert(player_json_format)
