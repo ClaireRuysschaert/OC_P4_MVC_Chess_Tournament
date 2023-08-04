@@ -1,6 +1,6 @@
 import os
 from typing import Dict
-from data.database import player_database
+from data.database import players_table
 class Player:
     
     players = []
@@ -50,4 +50,4 @@ class Player:
         root_folder_path = os.path.join(os.getcwd(), "data")
         if not os.path.isdir(root_folder_path): 
             os.mkdir(root_folder_path)
-        player_database.insert(player_json_format)
+        players_table.insert(player_json_format)

@@ -2,5 +2,8 @@ from tinydb import TinyDB
 import os
 
 ROOT_FOLDER_NAME = "data"
-player_database = TinyDB(os.path.join(ROOT_FOLDER_NAME, "players_data.json"))
-match_database = TinyDB(os.path.join(ROOT_FOLDER_NAME, "match_data.json"))
+database = TinyDB(os.path.join(ROOT_FOLDER_NAME, "players_and_match_data.json"))
+
+# Create tables for players and matches
+players_table = database.table('players')
+matches_table = database.table('matches')

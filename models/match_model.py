@@ -1,7 +1,7 @@
 from typing import Dict
 from models.player_model import Player
 import random
-from data.database import match_database
+from data.database import matches_table
 import os
 class Match:
     def __init__(self, name: str, pair_players: list[Player]):
@@ -37,7 +37,7 @@ class Match:
         root_folder_path = os.path.join(os.getcwd(), "data")
         if not os.path.isdir(root_folder_path): 
             os.mkdir(root_folder_path)
-        match_database.insert(match_json_format)
+        matches_table.insert(match_json_format)
         
     def set_player_color(self):
         """Randomly assign color chess piece for players."""
