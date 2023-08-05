@@ -4,9 +4,8 @@ import random
 from data.database import matches_table
 import os
 class Match:
-    def __init__(self, name: str, pair_players: list[Player]):
+    def __init__(self, pair_players: list[Player]):
         """Initialise les informations d'un match."""
-        self.name = name
         self.pair_players = pair_players
         self.player_one = pair_players[0]
         self.player_two = pair_players[1]
@@ -25,7 +24,6 @@ class Match:
     def match_data_to_json(self) -> Dict[str, str|list]:
         """Return match informations in dict/json format."""
         match_json_format = {
-            "name": self.name,
             "pair_players": self.pair_players,
         }
         return match_json_format
@@ -38,36 +36,3 @@ class Match:
         if not os.path.isdir(root_folder_path): 
             os.mkdir(root_folder_path)
         matches_table.insert(match_json_format)
-        
-    def set_player_color(self):
-        """Randomly assign color chess piece for players."""
-        colors = ["white", "black"]
-        random.shuffle(colors)
-        self.player_one_color = colors[0]
-        self.player_two_color = colors[1]
-
-    def get_match_score(self):
-        self.set_player_color()
-
-        # Change with the view later
-        print(
-            "Who have won the match ? If it's : \n"
-            f" - {self.player_one}, type 1\n"
-            f" - {self.player_two}, type 2\n"
-            " - A tie, type 3."
-        )
-
-        match_winner = int(input())
-        if match_winner == 1:
-            self.player_one_score += 1
-        if match_winner == 2:
-            self.player_two_score += 1
-        if match_winner == 3:
-            self.player_one_score += 0.5
-            self.player_two_score += 0.5
-        else:
-            print("Please a number between 1 and 3.")
-
-        # MAJ match score in player's tournament score
-        self.player_one.tournament_score += self.player_one_score
-        self.player_two.tournament_score += self.player_two_score

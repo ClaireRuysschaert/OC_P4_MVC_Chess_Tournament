@@ -1,24 +1,50 @@
-#from models.match_model import Match
-from typing import Dict
-from tinydb import Query
-from data.database import players_table
 
-def get_new_match_info() -> Dict[str, str|list]:
-    "Return new match informations from user input."
+#TO DO : place to Round view!
+from typing import Tuple
+
+
+def all_players_created() -> bool:
+    """Make sure that all the players are created by the user"""
     
-    name = input("""Nom du match:\n> """)
-    player_one_INE = input("""Identifiant national d'échec du premier joueur:\n> """)
-    player_two_INE = input("""Identifiant national d'échec du second joueur:\n> """)
+    is_the_players_created = input("Avez-vous enregistré tous les joueurs participant au tournoi? (o/n)")
     
-    Player = Query()
-    # Si les joueurs n'existent pas, renvoyer vers la création de joueurs
-    player_one = players_table.search(Player.chess_national_identifier == player_one_INE)   
-    player_two = players_table.search(Player.chess_national_identifier == player_two_INE)
-    pair_players = [player_one, player_two]
+    if is_the_players_created == "n":
+        print("Veuillez créer tous les joueurs participant au tournoi AVANT de créer un tour.")
+        return False
+    else:
+        return True
+
+def get_matchs_score(pair_players) -> None:
+    """Get the match score by the user from pair players."""
     
-    print(f"Le match {name} a été sauvegardé avec succès.")
+    #Get the INE of each pair into pair_players list
+    player_INE = []
+    for pair in pair_players["pair_players"]:
+        first_player_INE = pair[0]["chess_national_identifier"]
+        second_player_INE = pair[1]["chess_national_identifier"]
+        player_INE.append((first_player_INE, second_player_INE))
+
+    #Ask to the user who have won the match for each pair
     
-    return {
-        "name": name,
-        "pair_players": pair_players
-    }
+    # input = "Qui a gagné le premier match ? Si c'est : \n"
+    #         f" - {player_INE}"
+    
+    
+    
+        # print(
+        #     "Who have won the match ? If it's : \n"
+        #     f" - {self.player_one}, type 1\n"
+        #     f" - {self.player_two}, type 2\n"
+        #     " - A tie, type 3."
+        # )
+
+        # match_winner = int(input())
+        # if match_winner == 1:
+        #     self.player_one_score += 1
+        # if match_winner == 2:
+        #     self.player_two_score += 1
+        # if match_winner == 3:
+        #     self.player_one_score += 0.5
+        #     self.player_two_score += 0.5
+        # else:
+        #     print("Please a number between 1 and 3.")

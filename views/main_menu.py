@@ -6,8 +6,8 @@ sys.path.insert(0, project_path)
 
 from views.player import get_new_player_info
 from controllers.player import create_player 
-from views.match import get_new_match_info
-from controllers.match import create_match
+from views.match import all_players_created, get_matchs_score
+from controllers.match import create_first_random_player_pairs, create_match
 
 def main_menu_display() -> None:
     """First users entry point where all the functionalities are listed."""
@@ -17,6 +17,7 @@ def main_menu_display() -> None:
                         "1 - Créer un tournoi\n"
                         "2 - Charger un tournoi\n"
                         "3 - Créer des joueurs\n"
+                        #afficher tous les joueurs créés
                         "4 - Afficher les rapports\n"
                         "5 - Jouer un tournoi\n"
                         "6 - Créer un match\n"
@@ -47,17 +48,25 @@ def main_menu_display() -> None:
             #mettre à jour le classement 
             
         # 5 - Jouer un tournoi
-        if user_input == "5":
+        elif user_input == "5":
             print("Créer un tournoi avec un controller.")
         
-        # 6 - Créer un match
-        if user_input == "6":
-            match_infos = get_new_match_info()
-            create_match(match_infos)
+        # 6 - Créer le premier round
+        elif user_input == "6":
+            if all_players_created():
+                pair_players = create_first_random_player_pairs()
+                create_match(pair_players)
+                
+                print("Place aux matchs! Les joueurs suivant vont jouer l'un contre l'autre : \n")
+                for pair in pair_players["pair_players"]:
+                    first_player = pair[0]["chess_national_identifier"]
+                    second_player = pair[1]["chess_national_identifier"]
+                    print(f"{first_player} versus {second_player}\n")
             
         # 7 - Jouer un match
-        if user_input == "7":
+        elif user_input == "7":
             pass
+        #match_infos = get_matchs_score(pair_players)
             # couleur
             # récup résultats    
             
