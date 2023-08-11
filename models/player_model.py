@@ -1,5 +1,7 @@
 import os
-from typing import Dict
+from typing import Dict, List
+
+from tinydb import Query
 from data.database import players_table
 class Player:
     
@@ -45,9 +47,33 @@ class Player:
     @staticmethod
     def create_player_to_db(player_json_format) -> None:
         """Create the new player to the database.
-        These informations are saved in players_data.json in data folder."""
+        These informations are saved in database.json in data folder."""
         
         root_folder_path = os.path.join(os.getcwd(), "data")
         if not os.path.isdir(root_folder_path): 
             os.mkdir(root_folder_path)
         players_table.insert(player_json_format)
+
+    @staticmethod
+    def get_all_players_created_in_db() -> List[Dict[str, str|int]]:
+        """Get all the players created in the database by their id."""
+        Player = Query() # NOSONAR
+        # Retrieve all players by their id
+        all_players_created = players_table.search(Player.doc_id.all)
+        return all_players_created
+    
+    @classmethod
+    def get_all_players_ine_in_db(cls) -> List[str]:
+        """Get all the players ine created in the database."""
+        ine_list = []
+        for player in cls.get_all_players_created_in_db():
+            ine_list.append(player["chess_national_identifier"])
+        return ine_list
+    
+    @classmethod
+    def does_player_exists_in_db(cls, player_ine: str) -> bool:
+        """Return True if the player exists in the database."""
+        if player_ine in cls.get_all_players_ine_in_db():
+            return True
+        else:
+            return False
