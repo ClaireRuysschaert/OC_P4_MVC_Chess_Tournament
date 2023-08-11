@@ -1,11 +1,11 @@
 import sys
 from pathlib import Path
-
 project_path = str(Path(__file__).parent.parent)
 sys.path.insert(0, project_path)
 
 from controllers.match import create_first_random_player_pairs, get_players_ine, create_match
 from controllers.tournament import create_new_tournament
+from utils.input_validation import get_integer_input
 from views.match import get_matchs_score
 from views.player import display_player_creation_menu
 from views.tournament import get_tournament_info, check_all_players_created, create_add_players_to_tournament
@@ -15,7 +15,7 @@ def main_menu_display() -> None:  # NOSONAR
     """First users entry point where all the functionalities are listed."""
     
     while True:
-        user_input = input("Que voulez vous faire ?\n\n"
+        user_input = get_integer_input("Quelle action voulez vous réaliser ?\n\n"
                         "1 - Créer un tournoi\n"
                         "2 - Charger un tournoi\n"
                         "3 - Créer des joueurs\n"
@@ -24,14 +24,15 @@ def main_menu_display() -> None:  # NOSONAR
                         "5 - Jouer un tournoi\n"
                         "6 - Créer un match\n"
                         "7 - Jouer un match\n"
-                        "q - Quitter\n\n> ")
+                        "0 - Quitter\n\n> ", 0, 10)
     
         # 1 - Créer un tournoi
-        if user_input == "1":
+        if user_input == 1:
             # Récupérer les informations préliminaires du tournoi et les sauvegarder
             tournament_info = get_tournament_info()
             tournament_id = create_new_tournament(tournament_info)
-            print(f"\nTournoi créé avec succès ! ID : {tournament_id}\n")
+            print(f"\nTournoi créé avec succès ! ID : {tournament_id}.")
+            print("Veuillez vous le noter si vous voulez charger les informations de ce tournoi.\n")
             # Vérifier si les joueurs proposés par l'utilisateur sont à 
             # créer ou/et à ajouter au tournoi
             create_add_players_to_tournament(tournament_id)
@@ -40,25 +41,27 @@ def main_menu_display() -> None:  # NOSONAR
             
         
         # 2 - Charger un tournoi
-        elif user_input == "2":
-            print("charger un tournoi avec le controller et une vue.")
+        elif user_input == 2:
+            pass
         
-        # 3 - Créer des joueurs
-        elif user_input == "3":
-            display_player_creation_menu()     
+        # 3 - Créer un joueur
+        elif user_input == 3:
+            print("\nVous avez choisi de créer un joueur.\n")
+            player_ine = input("Veuillez entrer l'identifiant national d'échec du joueur à créer:\n>")
+            display_player_creation_menu(player_ine)     
         
         # 4 - Afficher des rapports
-        elif user_input == "4": 
+        elif user_input == 4: 
             print("to be continued...")
             #afficher les résultats
             #mettre à jour le classement 
             
         # 5 - Jouer un tournoi
-        elif user_input == "5":
+        elif user_input == 5:
             print("Créer un tournoi avec un controller.")
         
         # 6 - Créer le premier round
-        elif user_input == "6":
+        elif user_input == 6:
             pair_players = create_first_random_player_pairs()
             if check_all_players_created():
                 create_match(pair_players)
@@ -70,7 +73,7 @@ def main_menu_display() -> None:  # NOSONAR
                     print(f"{first_player} versus {second_player}\n")
             
         # 7 - Jouer le premier round
-        elif user_input == "7":
+        elif user_input == 7:
             pair_players = create_first_random_player_pairs()
             players_ine = get_players_ine(pair_players)
             scores_list = get_matchs_score(players_ine)

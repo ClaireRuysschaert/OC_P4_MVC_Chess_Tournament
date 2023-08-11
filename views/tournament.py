@@ -54,14 +54,16 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
     print("Nous allons maintenant ajouter les joueurs participant au tournoi.\n")
 
     tournament_number_of_players = Tournament.get_tournaments_infos_from_db(tournament_id)["number_of_players"]
-
-    for _ in range(int(tournament_number_of_players)):
+    players_list = Tournament.get_tournaments_infos_from_db(tournament_id)["players"]
+    
+    while int(tournament_number_of_players) != len(players_list):
+    #for _ in range(int(tournament_number_of_players)+2):
         player_ine = input("\nVeuillez entrer l'identifiant national d'échec du joueur :\n>")
         if Tournament.does_player_exists_in_tournament_list(tournament_id, player_ine):
             print("\nLe joueur est déjà inscrit dans le tournoi!")
             print("\nVeuillez entrer un autre identifiant.")
         elif Player.does_player_exists_in_db(player_ine):
-            print("\nLe joueur existe dans la base de données!)")
+            print("\nLe joueur existe dans la base de données!")
             is_player_to_add = input("\nVoulez vous bien l'ajouter au tournoi ? (o/n)\n")
             if is_player_to_add == "o":
                 Tournament.add_player_to_tournament(tournament_id, player_ine)
@@ -72,7 +74,7 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
             print("\nLe joueur n'existe pas dans la base de données!")
             is_player_to_create = input("\nVoulez vous bien le créer ? (o/n)\n")
             if is_player_to_create == "o":
-                display_player_creation_menu()
+                display_player_creation_menu(player_ine)
                 Tournament.add_player_to_tournament(tournament_id, player_ine)
                 print("\nLe joueur a été créé et ajouté au tournoi.")
             else:
