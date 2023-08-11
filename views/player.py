@@ -1,15 +1,19 @@
 from typing import Dict
 from controllers.player import create_player
-from models.player_model import Player
 from utils.input_validation import get_string_input, get_birthday_date_input
+from models.player_model import Player
+from utils.input_validation import get_chess_national_identifier_input
 
 def display_player_creation_menu(player_ine: str) -> None:
     """Display the player creation menu."""
+        
+    if Player.does_player_exists_in_db(player_ine):
+        print("\nErreur. Le joueur existe déjà dans la base de données!\n")
+    else:
+        print("""\nLe joueur n'existe pas dans la base de données, nous allons le créer.\n""")
+        player_info = get_new_player_info(player_ine)
+        create_player(player_info)
 
-    print("""\nVous avez choisi de créer un joueur.\n""")
-            
-    player_info = get_new_player_info(player_ine)
-    create_player(player_info)
 
 def get_new_player_info(player_ine: str) -> Dict[str, int|str]:
     """Return new player informations from user input."""
@@ -22,7 +26,7 @@ def get_new_player_info(player_ine: str) -> Dict[str, int|str]:
 
     chess_national_identifier = player_ine
 
-    print(f"{first_name} {name} a été ajouté(e) aux joueurs créés.")
+    print(f"\n{first_name} {name} a été ajouté(e) aux joueurs créés.\n")
 
     return {
         "first_name": first_name,
