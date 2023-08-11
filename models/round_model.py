@@ -2,10 +2,8 @@ import datetime
 from models.match_model import Match
 
 class Round:
-    def __init__(self, name: str, pair_players: list):
+    def __init__(self):
         """Initialise les informations d'un round."""
-        self.name = name
-        self.pair_players = pair_players
         self.start_time = self.get_time_now()
         self.end_time = ""
         self.matchs = self.create_match()
