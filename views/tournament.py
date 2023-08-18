@@ -45,16 +45,24 @@ def check_all_players_created() -> bool:
     return is_the_players_created
 
 def create_add_players_to_tournament(tournament_id: int) -> None:
-    """Add players to a tournament in the database."""
+    """
+    Add players to a tournament in the database.
+    
+    This function guides the user through the process of adding players to a tournament.
+    It checks if the desired number of players has been added and allows the user to
+    input player information or select from existing players in the database.
+    """
 
     print("Nous allons maintenant ajouter les joueurs participant au tournoi.\n")
 
     tournament_number_of_players = Tournament.get_tournaments_infos_from_db(tournament_id)["number_of_players"]
-    players_list = Tournament.get_tournaments_infos_from_db(tournament_id)["players"]
+    players_ine_list = Tournament.get_tournaments_infos_from_db(tournament_id)["players"]
     
-    while int(tournament_number_of_players) != len(players_list):
-    #for _ in range(int(tournament_number_of_players)+2):
+    while int(tournament_number_of_players) != len(players_ine_list):
+        
+        print(int(tournament_number_of_players) - len(players_ine_list), "joueurs restants à ajouter au tournoi.\n")
         player_ine = get_chess_national_identifier_input("\nVeuillez entrer l'identifiant national d'échec du joueur :\n>")
+        
         if Tournament.does_player_exists_in_tournament_list(tournament_id, player_ine):
             print("\nLe joueur est déjà inscrit dans le tournoi!")
             print("\nVeuillez entrer un autre identifiant.")
@@ -63,6 +71,7 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
             is_player_to_add = get_yes_no_input("\nVoulez vous bien l'ajouter au tournoi ? (o/n)\n")
             if is_player_to_add:
                 Tournament.add_player_to_tournament(tournament_id, player_ine)
+                players_ine_list = Tournament.get_tournaments_infos_from_db(tournament_id)["players"]
                 print("\nLe joueur a été ajouté au tournoi.")
             else:
                 print("\nLe joueur n'a pas été ajouté au tournoi.")     
@@ -72,6 +81,11 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
             if is_player_to_create:
                 display_player_creation_menu(player_ine)
                 Tournament.add_player_to_tournament(tournament_id, player_ine)
+                players_ine_list = Tournament.get_tournaments_infos_from_db(tournament_id)["players"]
                 print("\nLe joueur a été créé et ajouté au tournoi.")
             else:
                 print("\nLe joueur n'a pas été créé ni ajouté au tournoi.")
+
+    print("\nTous les joueurs ont été ajoutés au tournoi.")
+    print("\nVoici la liste finale des ine des joueurs du tournoi :")
+    print(f"{players_ine_list}\n")
