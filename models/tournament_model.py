@@ -2,6 +2,8 @@ import datetime
 import random
 from turtle import st
 from typing import Dict, List
+
+from tinydb import Query
 from models.round_model import Round
 import os
 from data.database import tournaments_table
@@ -79,25 +81,21 @@ class Tournament:
         tournament_data["players"].append(player_ine)
         tournaments_table.update(tournament_data, doc_ids=[tournament_id])
     
+    @staticmethod
+    def get_tournament_id_from_db(tournament_id: int) -> Dict[str, str|int]:
+        """Load the tournament by it's id from the database."""
+        tournament = tournaments_table.get(doc_id=str(tournament_id))
+        return tournament
     
+    @staticmethod
+    def get_current_round_number(tournament: Dict[str, str|int]) -> int:
+        """Return the current round number of a tournament."""
+        current_round_number = len(tournament["round_list"])
+        return current_round_number
     
-    
-    
-    # def create_rounds(self, round_number):
-    #     pair_players = self.assign_players_pairs(current_round=round_number)
-    #     round = Round("Round " + str(round_number), pair_players)
-    #     self.round_list.append(round)
-
-    # def assign_players_pairs(self, current_round_number):
-    #     # First Round, players are shuffled randomly
-    #     if current_round_number == 0:
-    #         sorted_players = random.shuffle(self.players)
-    #     # Other rounds, players are sorted by their scores
-    #     else:
-    #         sorted_players = sorted(
-    #             self.players, key=lambda player: player.final_score, reverse=True
-    #         )
-
-    #         # If 2 final_scores are equal, assign competitors that haven't played together
-    #         # for player in sorted_players:
-    #         #     if player.final_score ==
+    @staticmethod
+    def update_round_list_to_tournament(tournament_id: int, round_id: str) -> None:
+        """Update the round list of a tournament with the new round."""
+        tournament = Tournament.get_tournament_id_from_db(tournament_id)
+        tournament["round_list"].append(round_id)
+        tournaments_table.update(tournament, doc_ids=[tournament_id])
