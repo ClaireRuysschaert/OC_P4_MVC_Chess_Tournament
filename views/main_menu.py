@@ -5,21 +5,21 @@ sys.path.insert(0, project_path)
 
 from controllers.match import create_first_random_player_pairs, get_players_ine, create_match
 from controllers.tournament import create_new_tournament
+from controllers.round import create_new_round
 from utils.input_validation import get_integer_input, get_chess_national_identifier_input
 from views.match import get_matchs_score
 from views.player import display_player_creation_menu
 from views.tournament import get_tournament_info, check_all_players_created, create_add_players_to_tournament
-
+from models.tournament_model import Tournament
 
 def main_menu_display() -> None:  # NOSONAR
     """First users entry point where all the functionalities are listed."""
     
     while True:
-        user_input = get_integer_input("Quelle action voulez vous réaliser ?\n\n"
+        user_input = get_integer_input("\nQuelle action voulez vous réaliser ?\n\n"
                         "1 - Créer un tournoi\n"
-                        "2 - Charger un tournoi\n"
+                        "2 - Charger et jouer un tournoi\n"
                         "3 - Créer des joueurs\n"
-                        #afficher tous les joueurs créés
                         "4 - Afficher les rapports\n"
                         "5 - Jouer un tournoi\n"
                         "6 - Créer un match\n"
@@ -36,13 +36,15 @@ def main_menu_display() -> None:  # NOSONAR
             # Vérifier si les joueurs proposés par l'utilisateur sont à 
             # créer ou/et à ajouter au tournoi
             create_add_players_to_tournament(tournament_id)
-            #TODO: afficher les joueurs du tournoi
-            #TODO: créer le round 1
             
         
-        # 2 - Charger un tournoi
+        # 2 - Charger et jouer un tournoi
         elif user_input == 2:
-            pass
+            #TODO: charger le tournoi
+            tournament_id = get_integer_input("Veuillez entrer l'ID du tournement à charger:\n", 1, 1000)
+            tournament = Tournament.get_tournament_id_from_db(tournament_id)
+            current_round_number = Tournament.get_current_round_number(tournament)
+            create_new_round(tournament_id, current_round_number)
         
         # 3 - Créer un joueur
         elif user_input == 3:
@@ -60,7 +62,7 @@ def main_menu_display() -> None:  # NOSONAR
         elif user_input == 5:
             print("Créer un tournoi avec un controller.")
         
-        # 6 - Créer le premier round
+        # 6 - Créer le premier match
         elif user_input == 6:
             pair_players = create_first_random_player_pairs()
             if check_all_players_created():
