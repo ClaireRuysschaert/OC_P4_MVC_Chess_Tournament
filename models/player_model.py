@@ -57,9 +57,9 @@ class Player:
     @staticmethod
     def get_all_players_created_in_db() -> List[Dict[str, str|int]]:
         """Get all the players created in the database by their id."""
-        Player = Query() # NOSONAR
+        player_query = Query() # NOSONAR
         # Retrieve all players by their id
-        all_players_created = players_table.search(Player.doc_id.all)
+        all_players_created = players_table.search(player_query.doc_id.all)
         return all_players_created
     
     @classmethod
@@ -77,3 +77,11 @@ class Player:
             return True
         else:
             return False
+
+    @staticmethod
+    def update_met_competitors_list_in_db(player_ine: str, competitor_ine: str) -> None:
+        """Add the competitor id in the met_competitors list of a player in the database."""
+        player_query = Query()
+        player = players_table.get(player_query.chess_national_identifier == player_ine)
+        player["met_competitors"].append(competitor_ine)
+        players_table.update(player, doc_ids=[player.doc_id])
