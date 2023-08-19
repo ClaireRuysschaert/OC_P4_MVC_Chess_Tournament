@@ -1,72 +1,50 @@
-import random
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
-from tinydb import Query
-
-from data.database import players_table
 from models.match_model import Match
 from models.player_model import Player
+from models.round_model import Round
 
 
-def create_first_random_player_pairs() -> List[Tuple]:
-    "Return first pair players from random mixing."
+def create_match(round_id: str, pair_players: List[Tuple[str, str]]) -> int:
+    """Create a new match instance from round_id and player_pairs and save it to database."""
+    new_match = Match(
+        round_id=round_id,
+        pair_players=pair_players
+    )
     
-    Player = Query() # NOSONAR
-
-    # Retrieve all players by their id
-    all_players_created = players_table.search(Player.doc_id.all)
-
-    # Save their INE in a list to be shuffled
-    players_ine = [player["chess_national_identifier"] for player in all_players_created]
-    random.shuffle(players_ine)
-
-    # Create pair players
-    pair_players = []
-
-    for i in range(0, len(players_ine), 2):
-        player_one = players_table.get(Player.chess_national_identifier == players_ine[i])
-        player_two = players_table.get(Player.chess_national_identifier == players_ine[i+1])
-        pair_players.append((player_one, player_two))
+    match_json_format = new_match.match_data_to_json()
     
-    return pair_players
+    match_id = new_match.create_match_to_db(match_json_format)
+    Round.update_round_match_list(round_id, match_id)
+    return match_id
 
-def get_players_ine(pair_players: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
-    """Get the INE of each pair into pair_players list."""
+def update_matchs_score(match_id: int, match_winner: int) -> None:
+    """
+    Update the scores of a match based on the result.
     
-    players_ine: List[Tuple[str, str]] = []
-    for pair in pair_players:
-        first_player_ine = pair[0]["chess_national_identifier"]
-        second_player_ine = pair[1]["chess_national_identifier"]
-        if first_player_ine and second_player_ine:
-            players_ine.append((first_player_ine, second_player_ine))
-        else:
-            raise ValueError("Missing chess national identifier")
+    Args:
+        match_id (int): The ID of the match to update.
+        match_winner (int): The result of the match:
+            - 1: Player one wins.
+            - 2: Player two wins.
+            - 3 : It's a tie.
+    """
     
-    return players_ine
-
-def create_match(pair_players: List[Tuple[str, str]]) -> None:
-    """Create a new match instance from player_pairs and save it to database."""
-    # TODO: change the attributes to instanciate player_one and player_two + score
-    try:
-        new_match = Match(
-            pair_players=pair_players
-        )
-        
-        match_json_format = new_match.match_data_to_json()
-        
-        new_match.create_match_to_db(match_json_format)
+    match = Match.get_match_info_from_db(match_id)
     
-    except Exception as e:
-        print(e)
-
-def update_scores(matchs_score):
-    """Update the scores for each player in the matchs_score list into db."""
+    if match_winner == 1:
+        match["player_one_score"] = 1
+    elif match_winner == 2:
+        match["player_two_score"] = 1
+    else:
+        match["player_one_score"] = 0.5
+        match["player_two_score"] = 0.5    
     
-    for player_ine, score in matchs_score:
-        # Get the player from the database using their INE
-        Player = Query() # NOSONAR
-        player = players_table.get(Player.chess_national_identifier == player_ine)
-        
-        # Update the player's score in the database
-        player["final_score"] += score
-        players_table.update({"final_score": player["final_score"]}, Player.chess_national_identifier == player_ine)
+    Match.update_matchs_score_in_db(match)
+    print("Les scores du match ont été mis à jour.")
+    
+    match_updated = Match.get_match_info_from_db(match_id)
+    Player.update_player_final_score_in_db(match_updated["player_one"], match_updated["player_one_score"])
+    Player.update_player_final_score_in_db(match_updated["player_two"], match_updated["player_two_score"])
+    print("Les scores des joueurs ont été mis à jour.")
+    
