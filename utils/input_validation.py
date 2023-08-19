@@ -31,7 +31,7 @@ def get_string_input(prompt:str) -> str:
         if cleaned_input:
             return cleaned_input
         else:
-            print("Veuillez entrer un texte non vide sans espaces.\n")
+            print("Veuillez entrer un texte non vide.\n")
             
            
 def get_chess_national_identifier_input(prompt: str) -> str:
@@ -52,7 +52,7 @@ def get_chess_national_identifier_input(prompt: str) -> str:
         except ValueError:
             print("Veuillez entrer un numéro d'identifiant valide.\n")
             print("Il doit être composé de 2 lettres suivies de 5 chiffres.\n")
-            print("Exemple : 'AB12345")
+            print("Exemple : AB12345")
 
 def get_birthday_date_input(prompt: str) -> str:
     """
