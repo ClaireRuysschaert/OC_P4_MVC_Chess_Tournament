@@ -56,4 +56,10 @@ class Round:
             os.mkdir(root_folder_path)
         round_id = rounds_table.insert(round_json_format)
         return round_id
- 
+    
+    @staticmethod
+    def update_round_match_list(round_id: str, match_id: int) -> None:
+        """Update the match list of the round in the database."""
+        round = rounds_table.get(doc_id=str(round_id))
+        round["match_list"].append(match_id)
+        rounds_table.update(round, doc_ids=[int(round_id)])

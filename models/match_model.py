@@ -1,12 +1,15 @@
 from typing import Dict
+
+from tinydb import Query
 from models.player_model import Player
 import random
 from data.database import matches_table
 import os
 from typing import Dict, List, Tuple
 class Match:
-    def __init__(self, pair_players: Dict[str, List[Tuple]]):
+    def __init__(self, round_id: str, pair_players: Dict[str, List[Tuple]]):
         """Initialise les informations d'un match."""
+        self.roud_id = round_id
         self.pair_players = pair_players
         self.player_one = pair_players[0]
         self.player_two = pair_players[1]
@@ -23,6 +26,7 @@ class Match:
     def match_data_to_json(self) -> Dict[str, str|list]:
         """Return match informations in dict/json format."""
         match_json_format = {
+            "round_id": self.roud_id,
             "player_one": self.pair_players[0],
             "player_two": self.pair_players[1],
             "player_one_score": self.player_one_score,
@@ -31,13 +35,48 @@ class Match:
         return match_json_format
     
     @staticmethod
-    def create_match_to_db(match_json_format) -> None:
+    def create_match_to_db(match_json_format) -> int:
         """Create the new match to the database.
         These informations are saved in database.json in data folder."""
         root_folder_path = os.path.join(os.getcwd(), "data")
         if not os.path.isdir(root_folder_path): 
             os.mkdir(root_folder_path)
-        matches_table.insert(match_json_format)
+        match_id = matches_table.insert(match_json_format)
+        return match_id
 
+    @staticmethod
+    def get_match_info_from_db(match_id: int) -> Dict[str, str|list]:
+        """Get the informations of a match from the database."""
+        match = matches_table.get(doc_id=match_id)
+        return match
     
+    @staticmethod
+    def update_matchs_score_in_db(match: Dict[str, str|list]) -> None:
+        """Update the score of a match in the database."""
+        matches_table.update(match, doc_ids=[match.doc_id])
         
+    @staticmethod
+    def does_all_matches_have_been_played(round_id: int) -> bool:
+        """
+        Check if all matches for a given round have been played.
+        
+        Args:
+            round_id (int): The identifier of the round to check.
+            
+        Returns:
+            bool: True if all matches have been played, False otherwise.
+        """
+        matches = matches_table.search(Query().round_id == round_id)
+        total_matches = len(matches)
+        matches_played = 0
+        for match in matches:
+            match_score_sum = match["player_one_score"] + match["player_two_score"]
+            if int(match_score_sum) > 0:
+                matches_played += 1
+            else:
+                print(f"Le match {match.doc_id} n'a pas encore été joué.") 
+        
+        if matches_played == total_matches:
+            return True
+        else:
+            return False

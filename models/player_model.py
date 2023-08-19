@@ -85,3 +85,11 @@ class Player:
         player = players_table.get(player_query.chess_national_identifier == player_ine)
         player["met_competitors"].append(competitor_ine)
         players_table.update(player, doc_ids=[player.doc_id])
+
+    @staticmethod
+    def update_player_final_score_in_db(player_ine: str, player_score: str) -> None:
+        """Update the final score for each player in the matchs_score list into db."""
+        player_query = Query()
+        player = players_table.get(player_query.chess_national_identifier == player_ine)
+        player["final_score"] += player_score
+        players_table.update({"final_score": player["final_score"]}, player_query.chess_national_identifier == player_ine)
