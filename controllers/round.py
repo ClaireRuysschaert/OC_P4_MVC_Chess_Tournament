@@ -25,11 +25,10 @@ def assign_player_pairs(tournament_id: int, current_round_number: int) -> list[l
         pass
 
 
-def create_new_round(tournament_id: int, current_round_number: int) -> None:
+def create_new_round(tournament_id: int, current_round_number: int) -> (str, list[list[str]]):
     """
     Create a new round instance from round_info and save it to database.
     """
-    
     player_pairs = assign_player_pairs(tournament_id, current_round_number)    
     
     round_number_to_create = current_round_number + 1
@@ -46,3 +45,4 @@ def create_new_round(tournament_id: int, current_round_number: int) -> None:
     round_json_format = round.round_data_to_json()
     round_id = round.create_round_to_db(round_json_format)
     Tournament.update_round_list_to_tournament(tournament_id, round_id)
+    return round_id, player_pairs
