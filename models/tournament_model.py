@@ -1,12 +1,10 @@
 import datetime
-import random
-from turtle import st
-from typing import Dict, List
-
-from tinydb import Query
-from models.round_model import Round
 import os
+from typing import Dict
+
 from data.database import tournaments_table
+
+
 class Tournament:
     def __init__(
         self, name: str, location: str, number_of_players: int, number_of_rounds: int = 4, start_time:str = None, description=""
