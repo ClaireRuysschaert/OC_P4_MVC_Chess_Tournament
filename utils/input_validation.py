@@ -15,7 +15,6 @@ def get_integer_input(prompt: str, min_value: int, max_value: int) -> int:
             else:
                 print(f"\nVeuillez enter un numéro entre {min_value} and {max_value}.\n")
         except ValueError:
-            #TODO: Changer le message selon le menu du main_menu.
             print("\nERREUR /!\ ")
             print("Veuillez entrer un numéro valide.\n")
 

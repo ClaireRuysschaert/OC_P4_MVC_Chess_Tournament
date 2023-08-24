@@ -4,7 +4,6 @@ from pathlib import Path
 project_path = str(Path(__file__).parent.parent)
 sys.path.insert(0, project_path)
 
-from controllers.match import update_matchs_score
 from controllers.round import create_new_round
 from controllers.tournament import create_new_tournament
 from models.tournament_model import Tournament
@@ -13,7 +12,7 @@ from utils.input_validation import (
     get_chess_national_identifier_input,
     get_integer_input,
 )
-from views.match import display_match_creation_menu, get_match_winner, play_matches_and_update_scores
+from views.match import display_match_creation_menu, play_matches_and_update_scores
 from views.player import display_player_creation_menu
 from views.tournament import create_add_players_to_tournament, get_tournament_info
 
@@ -72,7 +71,8 @@ def main_menu_display() -> None:  # NOSONAR
                 play_matches_and_update_scores()
                 all_matches_played = Match.does_all_matches_have_been_played(int(round_id))
             # TODO: le round id peut ne pas correspondre au round en cours (Round 1 mais id dans la db = 2)
-            print(f"\nTous les matchs du round {round_id} ont été joués !")
+            # Faire une pour vérifier si on doit créer un match, si oui, enumerate pour récupérer le match "en cours"
+            print(f"\nTous les matchs du round en cours ont été joués !")
             
             # TODO: 7 - Créer le round suivant
 

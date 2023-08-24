@@ -17,20 +17,9 @@ class Round:
     def get_time_now():
         return str(datetime.datetime.now().strftime("%d/%m/%Y, %Hh%M"))
 
-    #TODO: à bouger dans le match model
-    # def create_match(self) -> list[Match]:
-    #     matchs = []
-    #     for index, pair in enumerate(self.pair_players):
-    #         matchs.append(Match(name=f"Match {index}", pair_players=pair))
-    #     return matchs
-
     def get_round_results(self):
         print("Round over! Please enter match results.")
-        self.end_time = self.get_time_now
-
-        #TODO: à calculer de la match list ? 
-        # for match in self.matchs:
-        #     match.get_match_score()
+        self.end_time = self.get_time_now()
 
     def __str__(self):
         return self.name
