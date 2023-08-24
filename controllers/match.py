@@ -40,7 +40,7 @@ def update_matchs_score(match_id: int, match_winner: int) -> None:
         match["player_one_score"] = 0.5
         match["player_two_score"] = 0.5    
     
-    Match.update_matchs_score_in_db(match)
+    Match.update_matchs_score_in_db(match, match_id)
     print("Les scores du match ont été mis à jour.")
     
     match_updated = Match.get_match_info_from_db(match_id)

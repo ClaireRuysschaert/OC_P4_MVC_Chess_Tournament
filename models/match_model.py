@@ -49,9 +49,9 @@ class Match:
         return match
     
     @staticmethod
-    def update_matchs_score_in_db(match: Dict[str, str|list]) -> None:
+    def update_matchs_score_in_db(match, match_id: int) -> None:
         """Update the score of a match in the database."""
-        matches_table.update(match, doc_ids=[match.doc_id])
+        matches_table.update(match, doc_ids=[match_id])
         
     @staticmethod
     def does_all_matches_have_been_played(round_id: int) -> bool:
