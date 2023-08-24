@@ -51,7 +51,7 @@ def main_menu_display() -> None:  # NOSONAR
             tournament_id = validate_integer_input(
                 "Veuillez entrer l'ID du tournement à charger:\n", 1, 1000
             )
-            tournament = Tournament.get_tournament_id_from_db(tournament_id)
+            tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
             current_round_number = Tournament.get_current_round_number(tournament)
             # TODO: On ne veut pas forcément créer un round! Faire une condition, si le round n'existe pas, on le crée
             # Si le Round n'a pas toutes les informations de scores, on reste sur l'existant!

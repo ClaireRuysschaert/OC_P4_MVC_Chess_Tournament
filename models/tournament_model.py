@@ -68,9 +68,9 @@ class Tournament:
     
     @staticmethod
     def get_tournaments_infos_from_db(tournament_id: int) -> Dict[str, str|int]:
-        """Return the tournament informations from the database."""
-        tournament_data = tournaments_table.get(doc_id=tournament_id)
-        return tournament_data
+        """Load the tournament by it's id from the database."""
+        tournament = tournaments_table.get(doc_id=str(tournament_id))
+        return tournament
 
     @classmethod
     def add_player_to_tournament(cls, tournament_id: int, player_ine: str) -> None:
@@ -78,12 +78,6 @@ class Tournament:
         tournament_data = cls.get_tournaments_infos_from_db(tournament_id)
         tournament_data["players"].append(player_ine)
         tournaments_table.update(tournament_data, doc_ids=[tournament_id])
-    
-    @staticmethod
-    def get_tournament_id_from_db(tournament_id: int) -> Dict[str, str|int]:
-        """Load the tournament by it's id from the database."""
-        tournament = tournaments_table.get(doc_id=str(tournament_id))
-        return tournament
     
     @staticmethod
     def get_current_round_number(tournament: Dict[str, str|int]) -> int:
@@ -94,6 +88,6 @@ class Tournament:
     @staticmethod
     def update_round_list_to_tournament(tournament_id: int, round_id: str) -> None:
         """Update the round list of a tournament with the new round."""
-        tournament = Tournament.get_tournament_id_from_db(tournament_id)
+        tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
         tournament["round_list"].append(round_id)
         tournaments_table.update(tournament, doc_ids=[tournament_id])
