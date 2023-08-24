@@ -114,3 +114,22 @@ def validate_match_id_input(prompt: str) -> int:
         else:
             print("\nLe numéro de match n'existe pas.")
             print("Veuillez entrer un numéro de match valide.\n")
+
+def validate_number_of_players_input(prompt:str) -> int:
+    """
+    Prompt the user for a number of players and validate the input.
+    The number of players should be even.
+    If the input is valid, the function returns True.
+    If not, an error message is displayed, and the user is prompted again.
+    """
+    while True:
+        user_input = input(prompt)
+        try:
+            value = int(user_input)
+            if value % 2 == 0 and value > 0:
+                return value
+            else:
+                print("\nVeuillez entrer un nombre pair de joueurs.\n")
+        except ValueError:
+            print("\nERREUR /!\ ")
+            print("Veuillez entrer un numéro valide.\n")

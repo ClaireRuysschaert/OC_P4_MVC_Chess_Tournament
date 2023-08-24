@@ -1,18 +1,18 @@
 from models.player_model import Player
 from models.tournament_model import Tournament
 from views.player import display_player_creation_menu
-from utils.input_validation import validate_string_input, validate_integer_input, validate_chess_national_identifier_input, validate_yes_no_input
+from utils.input_validation import validate_string_input, validate_number_of_players_input, validate_integer_input, validate_chess_national_identifier_input, validate_yes_no_input
 
 def get_tournament_info() -> dict:
     """Get the tournament informations from the user."""
 
     tournament_name = validate_string_input("\nEntrez le nom du tournoi : \n")
     tournament_location = validate_string_input("\nEntrez le lieu du tournoi : \n")
-    tournament_number_of_players = validate_integer_input(
-        "\nEntrez le nombre de joueurs du tournoi :\n", 2, 20
+    tournament_number_of_players = validate_number_of_players_input(
+        "\nEntrez le nombre de joueurs du tournoi :\n",
     )
     tournament_description = validate_string_input("\nEntrez une description du tournoi :\n")
-    print("\n\nLe nombre de tours est fixé à 4.\n")
+    print("\n\nLe nombre de tours est généralement de 4.\n")
     tournament_number_of_rounds = validate_integer_input(
         "Entrez le nombre de tours du tournoi : \n", 4, 8
     )
