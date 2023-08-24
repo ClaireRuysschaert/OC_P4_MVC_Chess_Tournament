@@ -1,4 +1,6 @@
 from datetime import datetime
+from models.tournament_model import Tournament
+from models.match_model import Match
 
 def validate_integer_input(prompt: str, min_value: int, max_value: int) -> int:
     """
@@ -82,3 +84,33 @@ def validate_yes_no_input(prompt: str) -> bool:
             return False
         else:
             print("Veuillez répondre par 'o' (oui) ou 'n' (non).\n")
+
+def validate_tournament_id_input(prompt: str) -> int:
+    """
+    Prompt the user for a tournament id and validate the input.
+    If the input is valid, the function returns the tournament id (int). 
+    If not, an error message is displayed, and the user is prompted again.
+    """
+    while True:
+        user_input = input(prompt)
+        tournament = Tournament.get_tournaments_infos_from_db(user_input)
+        if tournament: 
+            return int(user_input)
+        else:
+            print("\nLe numéro de tournoi n'existe pas.")
+            print("Veuillez entrer un numéro de tournoi valide.\n")
+
+def validate_match_id_input(prompt: str) -> int:
+    """
+    Prompt the user for a match id and validate the input.
+    If the input is valid, the function returns the match id (int). 
+    If not, an error message is displayed, and the user is prompted again.
+    """
+    while True:
+        user_input = input(prompt)
+        match = Match.get_match_info_from_db(user_input)
+        if match: 
+            return int(user_input)
+        else:
+            print("\nLe numéro de match n'existe pas.")
+            print("Veuillez entrer un numéro de match valide.\n")

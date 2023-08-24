@@ -67,7 +67,7 @@ class Tournament:
             return False
     
     @staticmethod
-    def get_tournaments_infos_from_db(tournament_id: int) -> Dict[str, str|int]:
+    def get_tournaments_infos_from_db(tournament_id: int|str) -> Dict[str, str|int]:
         """Load the tournament by it's id from the database."""
         tournament = tournaments_table.get(doc_id=str(tournament_id))
         return tournament

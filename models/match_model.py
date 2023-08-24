@@ -45,9 +45,9 @@ class Match:
         return match_id
 
     @staticmethod
-    def get_match_info_from_db(match_id: int) -> Dict[str, str|list]:
+    def get_match_info_from_db(match_id: int|str) -> Dict[str, str|list]:
         """Get the informations of a match from the database."""
-        match = matches_table.get(doc_id=match_id)
+        match = matches_table.get(doc_id=str(match_id))
         return match
     
     @staticmethod

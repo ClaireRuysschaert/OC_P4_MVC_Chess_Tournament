@@ -10,7 +10,7 @@ from models.tournament_model import Tournament
 from models.match_model import Match
 from utils.input_validation import (
     validate_chess_national_identifier_input,
-    validate_integer_input,
+    validate_integer_input, validate_tournament_id_input
 )
 from views.match import display_match_creation_menu, play_matches_and_update_scores
 from views.player import display_player_creation_menu
@@ -48,9 +48,8 @@ def main_menu_display() -> None:  # NOSONAR
 
         # 2 - Charger et jouer un tournoi
         elif user_input == 2:
-            tournament_id = validate_integer_input(
-                "Veuillez entrer l'ID du tournement à charger:\n", 1, 1000
-            )
+            tournament_id = validate_tournament_id_input(
+                "Veuillez entrer l'ID du tournement à charger:\n")
             tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
             current_round_number = Tournament.get_current_round_number(tournament)
             # TODO: On ne veut pas forcément créer un round! Faire une condition, si le round n'existe pas, on le crée
