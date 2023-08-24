@@ -60,7 +60,7 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
     
     while int(tournament_number_of_players) != len(players_ine_list):
         
-        print(int(tournament_number_of_players) - len(players_ine_list), "joueurs restants à ajouter au tournoi.\n")
+        print(int(tournament_number_of_players) - len(players_ine_list), "joueur(s) restant(s) à ajouter au tournoi.\n")
         player_ine = validate_chess_national_identifier_input("\nVeuillez entrer l'identifiant national d'échec du joueur :\n>")
         
         if Tournament.does_player_exists_in_tournament_list(tournament_id, player_ine):
