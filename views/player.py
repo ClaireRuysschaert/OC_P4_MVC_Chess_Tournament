@@ -1,8 +1,7 @@
 from typing import Dict
 from controllers.player import create_player
-from utils.input_validation import get_string_input, get_birthday_date_input
+from utils.input_validation import validate_string_input, validate_birthday_date_input
 from models.player_model import Player
-from utils.input_validation import get_chess_national_identifier_input
 
 def display_player_creation_menu(player_ine: str) -> None:
     """Display the player creation menu."""
@@ -18,11 +17,11 @@ def display_player_creation_menu(player_ine: str) -> None:
 def get_new_player_info(player_ine: str) -> Dict[str, int|str]:
     """Return new player informations from user input."""
 
-    first_name = get_string_input("Prénom du joueur:\n> ")
+    first_name = validate_string_input("Prénom du joueur:\n> ")
     
-    name = get_string_input("Nom du joueur:\n> ")
+    name = validate_string_input("Nom du joueur:\n> ")
 
-    birthdate = get_birthday_date_input("Date de naissance du joueur au format : jj/mm/aaaa\n> ")
+    birthdate = validate_birthday_date_input("Date de naissance du joueur au format : jj/mm/aaaa\n> ")
 
     chess_national_identifier = player_ine
 

@@ -9,8 +9,8 @@ from controllers.tournament import create_new_tournament
 from models.tournament_model import Tournament
 from models.match_model import Match
 from utils.input_validation import (
-    get_chess_national_identifier_input,
-    get_integer_input,
+    validate_chess_national_identifier_input,
+    validate_integer_input,
 )
 from views.match import display_match_creation_menu, play_matches_and_update_scores
 from views.player import display_player_creation_menu
@@ -21,7 +21,7 @@ def main_menu_display() -> None:  # NOSONAR
     """First users entry point where all the functionalities are listed."""
 
     while True:
-        user_input = get_integer_input(
+        user_input = validate_integer_input(
             "\nQuelle action voulez vous réaliser ?\n\n"
             "1 - Créer un tournoi\n"
             "2 - Charger et jouer un tournoi\n"
@@ -48,7 +48,7 @@ def main_menu_display() -> None:  # NOSONAR
 
         # 2 - Charger et jouer un tournoi
         elif user_input == 2:
-            tournament_id = get_integer_input(
+            tournament_id = validate_integer_input(
                 "Veuillez entrer l'ID du tournement à charger:\n", 1, 1000
             )
             tournament = Tournament.get_tournament_id_from_db(tournament_id)
@@ -80,7 +80,7 @@ def main_menu_display() -> None:  # NOSONAR
         # 3 - Créer un joueur
         elif user_input == 3:
             print("\nVous avez choisi de créer un joueur.\n")
-            player_ine = get_chess_national_identifier_input(
+            player_ine = validate_chess_national_identifier_input(
                 "Veuillez entrer l'identifiant national d'échec du joueur à créer:\n>"
             )
             display_player_creation_menu(player_ine)

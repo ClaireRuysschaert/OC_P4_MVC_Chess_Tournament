@@ -1,6 +1,6 @@
 from datetime import datetime
 
-def get_integer_input(prompt: str, min_value: int, max_value: int) -> int:
+def validate_integer_input(prompt: str, min_value: int, max_value: int) -> int:
     """
     Prompt the user for an integer input within a specified range (min/max_values) and validate the input.
     If the input is valid, the function returns the integer. 
@@ -18,7 +18,7 @@ def get_integer_input(prompt: str, min_value: int, max_value: int) -> int:
             print("\nERREUR /!\ ")
             print("Veuillez entrer un numéro valide.\n")
 
-def get_string_input(prompt:str) -> str:
+def validate_string_input(prompt:str) -> str:
     """
     Prompt the user for a non-empty string input without spaces and validate the input.
     If the input is valid, the function returns the string without the spaces. 
@@ -30,10 +30,9 @@ def get_string_input(prompt:str) -> str:
         if cleaned_input:
             return cleaned_input
         else:
-            print("Veuillez entrer un texte non vide.\n")
-            
+            print("Veuillez entrer un texte non vide.\n")          
            
-def get_chess_national_identifier_input(prompt: str) -> str:
+def validate_chess_national_identifier_input(prompt: str) -> str:
     """
     Prompt the user for a chess national identifier and validate its format.
     The chess national identifier should consist of 2 letters followed by 5 digits.
@@ -53,7 +52,7 @@ def get_chess_national_identifier_input(prompt: str) -> str:
             print("Il doit être composé de 2 lettres suivies de 5 chiffres.\n")
             print("Exemple : AB12345")
 
-def get_birthday_date_input(prompt: str) -> str:
+def validate_birthday_date_input(prompt: str) -> str:
     """
     Prompt the user for a birthday date in the French format (jj/mm/aaaa) and validate the input.
     If the input is valid, the function returns the formatted date. 
@@ -68,7 +67,7 @@ def get_birthday_date_input(prompt: str) -> str:
         except ValueError:
             print("Veuillez entrer une date de naissance valide au format jj/mm/aaaa.\n")
             
-def get_yes_no_input(prompt: str) -> bool:
+def validate_yes_no_input(prompt: str) -> bool:
     """
     Prompt the user for a yes/no answer in the French format (o/n) and validate the input.
     If the input is valid, the function returns True for 'o' (yes) and False for 'n' (no). 

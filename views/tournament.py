@@ -1,19 +1,19 @@
 from models.player_model import Player
 from models.tournament_model import Tournament
 from views.player import display_player_creation_menu
-from utils.input_validation import get_string_input, get_integer_input, get_chess_national_identifier_input, get_yes_no_input
+from utils.input_validation import validate_string_input, validate_integer_input, validate_chess_national_identifier_input, validate_yes_no_input
 
 def get_tournament_info() -> dict:
     """Get the tournament informations from the user."""
 
-    tournament_name = get_string_input("\nEntrez le nom du tournoi : \n")
-    tournament_location = get_string_input("\nEntrez le lieu du tournoi : \n")
-    tournament_number_of_players = get_integer_input(
+    tournament_name = validate_string_input("\nEntrez le nom du tournoi : \n")
+    tournament_location = validate_string_input("\nEntrez le lieu du tournoi : \n")
+    tournament_number_of_players = validate_integer_input(
         "\nEntrez le nombre de joueurs du tournoi :\n", 2, 20
     )
-    tournament_description = get_string_input("\nEntrez une description du tournoi :\n")
+    tournament_description = validate_string_input("\nEntrez une description du tournoi :\n")
     print("\n\nLe nombre de tours est fixé à 4.\n")
-    tournament_number_of_rounds = get_integer_input(
+    tournament_number_of_rounds = validate_integer_input(
         "Entrez le nombre de tours du tournoi : \n", 4, 8
     )
 
@@ -39,7 +39,7 @@ def check_all_players_created() -> bool:
             player["name"],
             player["chess_national_identifier"],
         )
-    is_the_players_created = get_yes_no_input(
+    is_the_players_created = validate_yes_no_input(
         "Avez-vous enregistré tous les joueurs participant au tournoi? (o/n)"
     )
     return is_the_players_created
@@ -61,14 +61,14 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
     while int(tournament_number_of_players) != len(players_ine_list):
         
         print(int(tournament_number_of_players) - len(players_ine_list), "joueurs restants à ajouter au tournoi.\n")
-        player_ine = get_chess_national_identifier_input("\nVeuillez entrer l'identifiant national d'échec du joueur :\n>")
+        player_ine = validate_chess_national_identifier_input("\nVeuillez entrer l'identifiant national d'échec du joueur :\n>")
         
         if Tournament.does_player_exists_in_tournament_list(tournament_id, player_ine):
             print("\nLe joueur est déjà inscrit dans le tournoi!")
             print("\nVeuillez entrer un autre identifiant.")
         elif Player.does_player_exists_in_db(player_ine):
             print("\nLe joueur existe dans la base de données!")
-            is_player_to_add = get_yes_no_input("\nVoulez vous bien l'ajouter au tournoi ? (o/n)\n")
+            is_player_to_add = validate_yes_no_input("\nVoulez vous bien l'ajouter au tournoi ? (o/n)\n")
             if is_player_to_add:
                 Tournament.add_player_to_tournament(tournament_id, player_ine)
                 players_ine_list = Tournament.get_tournaments_infos_from_db(tournament_id)["players"]
@@ -77,7 +77,7 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
                 print("\nLe joueur n'a pas été ajouté au tournoi.")     
         else:
             print("\nLe joueur n'existe pas dans la base de données!")
-            is_player_to_create = get_yes_no_input("\nVoulez vous bien le créer ? (o/n)\n")
+            is_player_to_create = validate_yes_no_input("\nVoulez vous bien le créer ? (o/n)\n")
             if is_player_to_create:
                 display_player_creation_menu(player_ine)
                 Tournament.add_player_to_tournament(tournament_id, player_ine)

@@ -1,6 +1,6 @@
 from controllers.match import create_match, update_matchs_score
 from models.match_model import Match
-from utils.input_validation import get_integer_input
+from utils.input_validation import validate_integer_input
 
 
 def display_match_creation_menu(round_id: str, player_pairs:list[list[str]]) -> None:
@@ -21,7 +21,7 @@ def get_match_winner(match_id: int) -> int:
     3 means it's a tie.
     """
     match = Match.get_match_info_from_db(match_id)
-    match_winner = get_integer_input(f"Qui a gagné le match {match_id} ? Si c'est : \n"
+    match_winner = validate_integer_input(f"Qui a gagné le match {match_id} ? Si c'est : \n"
         f" - {match['player_one']}, tapez 1\n"
         f" - {match['player_two']}, tapez 2\n"
         " - Un match nul, tapez 3.\n", 1, 3)
@@ -38,13 +38,13 @@ def play_matches_and_update_scores() -> None:
     Returns:
         None
     """
-    match_id = get_integer_input(
+    match_id = validate_integer_input(
                 "Veuillez entrer l'ID du match à jouer:\n", 1, 1000
             )
     while match_id != 0:
         match_winner = get_match_winner(match_id)
         update_matchs_score(match_id, match_winner)
-        match_id = get_integer_input(
+        match_id = validate_integer_input(
             "Veuillez entrer l'ID du match suivant à jouer:\n Taper 0 pour quitter\n.",
             0,
             1000,
