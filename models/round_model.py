@@ -7,7 +7,15 @@ from utils.data_folder_management import create_data_folder_if_not_exists
 
 
 class Round:
-    def __init__(self, name:str, start_time:str, end_time:str, matchs_list:list[Match], tournament_id:str, player_pairs:list[list[str]]):
+    def __init__(
+        self,
+        name: str,
+        start_time: str,
+        end_time: str,
+        matchs_list: list[Match],
+        tournament_id: str,
+        player_pairs: list[list[str]],
+    ):
         """Initialise les informations d'un round."""
         self.name = name
         self.start_time = start_time
@@ -26,8 +34,8 @@ class Round:
 
     def __str__(self):
         return self.name
-    
-    def round_data_to_json(self) -> Dict[str, str|list]:
+
+    def round_data_to_json(self) -> Dict[str, str | list]:
         """Return round informations in dict/json format."""
         round_json_format = {
             "name": self.name,
@@ -38,7 +46,7 @@ class Round:
             "player_plairs": self.player_pairs,
         }
         return round_json_format
-    
+
     @staticmethod
     def create_round_to_db(round_json_format) -> str:
         """Create the new round to the database.
@@ -46,7 +54,7 @@ class Round:
         create_data_folder_if_not_exists()
         round_id = rounds_table.insert(round_json_format)
         return round_id
-    
+
     @staticmethod
     def update_round_match_list(round_id: str, match_id: int) -> None:
         """Update the match list of the round in the database."""

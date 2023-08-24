@@ -1,6 +1,7 @@
 from controllers.match import create_match, update_matchs_score
 from models.match_model import Match
-from utils.input_validation import validate_integer_input, validate_match_id_input
+from utils.input_validation import (validate_integer_input,
+                                    validate_match_id_input)
 
 
 def display_match_creation_menu(round_id: str, player_pairs: list[list[str]]) -> None:

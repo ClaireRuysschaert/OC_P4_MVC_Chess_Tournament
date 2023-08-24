@@ -23,7 +23,7 @@ class Match:
             [self.player_two, self.player_two_score],
         )
 
-    def match_data_to_json(self) -> Dict[str, str|list]:
+    def match_data_to_json(self) -> Dict[str, str | list]:
         """Return match informations in dict/json format."""
         match_json_format = {
             "round_id": self.roud_id,
@@ -33,7 +33,7 @@ class Match:
             "player_two_score": self.player_two_score,
         }
         return match_json_format
-    
+
     @staticmethod
     def create_match_to_db(match_json_format) -> int:
         """Create the new match to the database.
@@ -43,24 +43,24 @@ class Match:
         return match_id
 
     @staticmethod
-    def get_match_info_from_db(match_id: int|str) -> Dict[str, str|list]:
+    def get_match_info_from_db(match_id: int | str) -> Dict[str, str | list]:
         """Get the informations of a match from the database."""
         match = matches_table.get(doc_id=str(match_id))
         return match
-    
+
     @staticmethod
     def update_matchs_score_in_db(match, match_id: int) -> None:
         """Update the score of a match in the database."""
         matches_table.update(match, doc_ids=[match_id])
-        
+
     @staticmethod
     def does_all_matches_have_been_played(round_id: int) -> bool:
         """
         Check if all matches for a given round have been played.
-        
+
         Args:
             round_id (int): The identifier of the round to check.
-            
+
         Returns:
             bool: True if all matches have been played, False otherwise.
         """
@@ -72,8 +72,8 @@ class Match:
             if int(match_score_sum) > 0:
                 matches_played += 1
             else:
-                print(f"Le match {match.doc_id} n'a pas encore été joué.") 
-        
+                print(f"Le match {match.doc_id} n'a pas encore été joué.")
+
         if matches_played == total_matches:
             return True
         else:

@@ -1,5 +1,6 @@
-from tinydb import TinyDB
 import os
+
+from tinydb import TinyDB
 
 ROOT_FOLDER_NAME = "data"
 database = TinyDB(os.path.join(ROOT_FOLDER_NAME, "database.json"))

@@ -7,9 +7,8 @@ from utils.data_folder_management import create_data_folder_if_not_exists
 
 
 class Player:
-    
     players = []
-    
+
     def __init__(
         self,
         first_name: str,
@@ -33,17 +32,17 @@ class Player:
     def __str__(self):
         return f"Player {self.first_name} {self.name} ranking is {self.rank} with {self.final_score} points."
 
-    def player_data_to_json(self) -> Dict[str, str|int]:
+    def player_data_to_json(self) -> Dict[str, str | int]:
         """Return player informations in dict/json format."""
         player_json_format = {
             "first_name": self.first_name,
             "name": self.name,
             "birthdate": self.birthdate,
-            "chess_national_identifier": self.ine, 
-            "tournament_score": self.tournament_score, 
-            "final_score": self.final_score, 
-            "rank": self.rank, 
-            "met_competitors" : self.met_competitors
+            "chess_national_identifier": self.ine,
+            "tournament_score": self.tournament_score,
+            "final_score": self.final_score,
+            "rank": self.rank,
+            "met_competitors": self.met_competitors,
         }
         return player_json_format
 
@@ -55,13 +54,13 @@ class Player:
         players_table.insert(player_json_format)
 
     @staticmethod
-    def get_all_players_created_in_db() -> List[Dict[str, str|int]]:
+    def get_all_players_created_in_db() -> List[Dict[str, str | int]]:
         """Get all the players created in the database by their id."""
-        player_query = Query() # NOSONAR
+        player_query = Query()  # NOSONAR
         # Retrieve all players by their id
         all_players_created = players_table.search(player_query.doc_id.all)
         return all_players_created
-    
+
     @classmethod
     def get_all_players_ine_in_db(cls) -> List[str]:
         """Get all the players ine created in the database."""
@@ -69,7 +68,7 @@ class Player:
         for player in cls.get_all_players_created_in_db():
             ine_list.append(player["chess_national_identifier"])
         return ine_list
-    
+
     @classmethod
     def does_player_exists_in_db(cls, player_ine: str) -> bool:
         """Return True if the player exists in the database."""
@@ -92,4 +91,7 @@ class Player:
         player_query = Query()
         player = players_table.get(player_query.chess_national_identifier == player_ine)
         player["final_score"] += player_score
-        players_table.update({"final_score": player["final_score"]}, player_query.chess_national_identifier == player_ine)
+        players_table.update(
+            {"final_score": player["final_score"]},
+            player_query.chess_national_identifier == player_ine,
+        )

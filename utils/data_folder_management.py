@@ -1,5 +1,6 @@
 import os
 
+
 def create_data_folder_if_not_exists():
     """
     Create a data folder at the root directory path if it doesn't exist.
