@@ -51,5 +51,5 @@ def play_matches_and_update_scores() -> None:
         match_winner = get_match_winner(match_id)
         update_matchs_score(match_id, match_winner)
         match_id = validate_match_id_input(
-            "Veuillez entrer l'ID du match à jouer:\n",
+            "Veuillez entrer l'ID du match à jouer (0 pour quitter):\n",
         )
