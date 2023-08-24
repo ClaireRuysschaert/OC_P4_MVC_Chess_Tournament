@@ -46,7 +46,7 @@ def validate_chess_national_identifier_input(prompt: str) -> str:
         cleaned_input = user_input.strip()
         try:
             if len(cleaned_input) == 7 and cleaned_input[:2].isalpha() and cleaned_input[2:].isdigit():
-                return user_input
+                return cleaned_input
             else:
                 raise ValueError
         except ValueError:
@@ -109,7 +109,7 @@ def validate_match_id_input(prompt: str) -> int:
     while True:
         user_input = input(prompt)
         match = Match.get_match_info_from_db(user_input)
-        if match: 
+        if match or user_input == '0': 
             return int(user_input)
         else:
             print("\nLe numéro de match n'existe pas.")
