@@ -27,10 +27,9 @@ def main_menu_display() -> None:  # NOSONAR
             "2 - Charger et jouer un tournoi\n"
             "3 - Créer des joueurs\n"
             "4 - Afficher les rapports\n"
-            "5 - Jouer un tournoi\n"
             "0 - Quitter\n\n> ",
             0,
-            5,
+            4,
         )
 
         # 1 - Créer un tournoi
@@ -51,9 +50,18 @@ def main_menu_display() -> None:  # NOSONAR
             tournament_id = validate_tournament_id_input(
                 "Veuillez entrer l'ID du tournement à charger:\n")
             tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
-            current_round_number = Tournament.get_current_round_number(tournament)
+            print(f"Vous avez décidé de charger le tournoi {tournament['name']}.")
+            
+            # number of players must be equal to len of players list
+            if tournament["number_of_players"] != len(tournament["players"]):
+                print("\nLe nombre de joueurs ajouté au tournoi n'est pas égal au nombre de joueurs attendu.")
+                print(f"\nVoici la liste des joueurs déjà inscrits :{tournament['players']}")
+                create_add_players_to_tournament(tournament_id)
+        
+            
             # TODO: On ne veut pas forcément créer un round! Faire une condition, si le round n'existe pas, on le crée
             # Si le Round n'a pas toutes les informations de scores, on reste sur l'existant!
+            current_round_number = Tournament.get_current_round_number(tournament)
             round_id, player_pairs = create_new_round(
                 tournament_id, current_round_number
             )
@@ -89,10 +97,6 @@ def main_menu_display() -> None:  # NOSONAR
             print("to be continued...")
             # afficher les résultats
             # mettre à jour le classement
-
-        # 5 - Jouer un tournoi
-        elif user_input == 5:
-            print("Créer un tournoi avec un controller.")
 
         # Quitter
         else:
