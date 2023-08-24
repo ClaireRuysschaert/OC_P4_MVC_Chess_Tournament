@@ -16,3 +16,8 @@ def create_new_tournament(tournament_info: dict) -> str:
 
     tournament_id = tournament.create_tournament_to_db(tournament_json_format)
     return tournament_id
+
+def get_current_round_number(tournament_id: int) -> int:
+    tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
+    current_round_number = len(tournament["round_list"])
+    return current_round_number

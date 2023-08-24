@@ -5,9 +5,8 @@ project_path = str(Path(__file__).parent.parent)
 sys.path.insert(0, project_path)
 
 from controllers.round import create_new_round
-from controllers.tournament import create_new_tournament
+from controllers.tournament import create_new_tournament, get_current_round_number
 from models.match_model import Match
-from models.tournament_model import Tournament
 from utils.input_validation import (
     validate_chess_national_identifier_input,
     validate_integer_input,
@@ -15,7 +14,11 @@ from utils.input_validation import (
 )
 from views.match import display_match_creation_menu, play_matches_and_update_scores
 from views.player import display_player_creation_menu
-from views.tournament import create_add_players_to_tournament, get_tournament_info
+from views.tournament import (
+    create_add_players_to_tournament,
+    display_and_verify_tournament_info,
+    get_tournament_info_from_user,
+)
 
 
 def main_menu_display() -> None:  # NOSONAR
@@ -36,7 +39,7 @@ def main_menu_display() -> None:  # NOSONAR
         # 1 - Créer un tournoi
         if user_input == 1:
             # Récupérer les informations préliminaires du tournoi et les sauvegarder
-            tournament_info = get_tournament_info()
+            tournament_info = get_tournament_info_from_user()
             tournament_id = create_new_tournament(tournament_info)
             print(f"\nTournoi créé avec succès ! ID : {tournament_id}.")
             print(
@@ -51,22 +54,12 @@ def main_menu_display() -> None:  # NOSONAR
             tournament_id = validate_tournament_id_input(
                 "Veuillez entrer l'ID du tournement à charger:\n"
             )
-            tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
-            print(f"Vous avez décidé de charger le tournoi {tournament['name']}.")
-
-            # number of players must be equal to len of players list
-            if tournament["number_of_players"] != len(tournament["players"]):
-                print(
-                    "\nLe nombre de joueurs ajouté au tournoi n'est pas égal au nombre de joueurs attendu."
-                )
-                print(
-                    f"\nVoici la liste des joueurs déjà inscrits :{tournament['players']}"
-                )
-                create_add_players_to_tournament(tournament_id)
+            display_and_verify_tournament_info(tournament_id)
 
             # TODO: On ne veut pas forcément créer un round! Faire une condition, si le round n'existe pas, on le crée
             # Si le Round n'a pas toutes les informations de scores, on reste sur l'existant!
-            current_round_number = Tournament.get_current_round_number(tournament)
+            # Play tournament rounds, while loop
+            current_round_number = get_current_round_number(tournament_id)
             round_id, player_pairs = create_new_round(
                 tournament_id, current_round_number
             )
