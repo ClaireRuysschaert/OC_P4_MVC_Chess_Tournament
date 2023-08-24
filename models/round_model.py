@@ -1,8 +1,11 @@
 import datetime
-import os
 from typing import Dict
-from models.match_model import Match
+
 from data.database import rounds_table
+from models.match_model import Match
+from utils.data_folder_management import create_data_folder_if_not_exists
+
+
 class Round:
     def __init__(self, name:str, start_time:str, end_time:str, matchs_list:list[Match], tournament_id:str, player_pairs:list[list[str]]):
         """Initialise les informations d'un round."""
@@ -40,9 +43,7 @@ class Round:
     def create_round_to_db(round_json_format) -> str:
         """Create the new round to the database.
         These informations are saved in database.json in data folder."""
-        root_folder_path = os.path.join(os.getcwd(), "data")
-        if not os.path.isdir(root_folder_path): 
-            os.mkdir(root_folder_path)
+        create_data_folder_if_not_exists()
         round_id = rounds_table.insert(round_json_format)
         return round_id
     

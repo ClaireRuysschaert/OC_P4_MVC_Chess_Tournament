@@ -1,8 +1,11 @@
-import os
 from typing import Dict, List
 
 from tinydb import Query
+
 from data.database import players_table
+from utils.data_folder_management import create_data_folder_if_not_exists
+
+
 class Player:
     
     players = []
@@ -48,10 +51,7 @@ class Player:
     def create_player_to_db(player_json_format) -> None:
         """Create the new player to the database.
         These informations are saved in database.json in data folder."""
-        
-        root_folder_path = os.path.join(os.getcwd(), "data")
-        if not os.path.isdir(root_folder_path): 
-            os.mkdir(root_folder_path)
+        create_data_folder_if_not_exists()
         players_table.insert(player_json_format)
 
     @staticmethod

@@ -1,11 +1,11 @@
-from typing import Dict
+from typing import Dict, List, Tuple
 
 from tinydb import Query
-from models.player_model import Player
-import random
+
 from data.database import matches_table
-import os
-from typing import Dict, List, Tuple
+from utils.data_folder_management import create_data_folder_if_not_exists
+
+
 class Match:
     def __init__(self, round_id: str, pair_players: Dict[str, List[Tuple]]):
         """Initialise les informations d'un match."""
@@ -38,9 +38,7 @@ class Match:
     def create_match_to_db(match_json_format) -> int:
         """Create the new match to the database.
         These informations are saved in database.json in data folder."""
-        root_folder_path = os.path.join(os.getcwd(), "data")
-        if not os.path.isdir(root_folder_path): 
-            os.mkdir(root_folder_path)
+        create_data_folder_if_not_exists()
         match_id = matches_table.insert(match_json_format)
         return match_id
 

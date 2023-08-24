@@ -1,8 +1,8 @@
 import datetime
-import os
 from typing import Dict
 
 from data.database import tournaments_table
+from utils.data_folder_management import create_data_folder_if_not_exists
 
 
 class Tournament:
@@ -46,9 +46,7 @@ class Tournament:
     def create_tournament_to_db(tournament_json_format) -> str:
         """Create the new tournament to the database.
         These informations are saved in database.json in data folder."""
-        root_folder_path = os.path.join(os.getcwd(), "data")
-        if not os.path.isdir(root_folder_path): 
-            os.mkdir(root_folder_path)
+        create_data_folder_if_not_exists()
         tournament_id = tournaments_table.insert(tournament_json_format)
         return tournament_id
     
