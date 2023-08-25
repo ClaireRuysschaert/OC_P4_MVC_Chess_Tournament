@@ -6,6 +6,7 @@ sys.path.insert(0, project_path)
 
 from controllers.round import create_new_round
 from controllers.tournament import create_new_tournament, get_current_round_number
+from controllers.match import update_ranking
 from models.match_model import Match
 from utils.input_validation import (
     validate_chess_national_identifier_input,
@@ -79,10 +80,9 @@ def main_menu_display() -> None:  # NOSONAR
                 all_matches_played = Match.does_all_matches_have_been_played(
                     int(round_id)
                 )
-            # TODO: le round id peut ne pas correspondre au round en cours (Round 1 mais id dans la db = 2)
-            # Faire une pour vérifier si on doit créer un match, si oui, enumerate pour récupérer le match "en cours"
             print(f"\nTous les matchs du round en cours ont été joués !")
-
+            update_ranking(tournament_id)
+            
             # TODO: 7 - Créer le round suivant
 
         # 3 - Créer un joueur

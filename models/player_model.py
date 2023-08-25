@@ -95,3 +95,14 @@ class Player:
             {"final_score": player["final_score"]},
             player_query.chess_national_identifier == player_ine,
         )
+
+    @staticmethod
+    def update_player_rank_in_db(player_ine: str, player_rank: str) -> None:
+        """Update the rank for each player in the players list into db."""
+        player_query = Query()
+        player = players_table.get(player_query.chess_national_identifier == player_ine)
+        player["rank"] = player_rank
+        players_table.update(
+            {"rank": player["rank"]},
+            player_query.chess_national_identifier == player_ine,
+        )
