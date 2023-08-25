@@ -55,4 +55,5 @@ def create_new_round(
     round_json_format = round.round_data_to_json()
     round_id = round.create_round_to_db(round_json_format)
     Tournament.update_round_list_to_tournament(tournament_id, round_id)
-    return round_id, player_pairs
+    new_round_number = current_round_number + 1
+    return round_id, player_pairs, new_round_number
