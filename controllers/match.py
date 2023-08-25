@@ -51,6 +51,7 @@ def update_matchs_score(match_id: int, match_winner: int) -> None:
     )
     print("Les scores des joueurs ont été mis à jour.")
 
+
 def update_ranking(tournament_id: int) -> None:
     """Update the ranking of all players in the database."""
     all_players = Player.get_all_players_created_in_db()
@@ -58,19 +59,22 @@ def update_ranking(tournament_id: int) -> None:
     tournament_player = Tournament.get_tournaments_players_ine(tournament_id)
     current_rank = 0
     current_score = 0
-    
+
     for index, player in enumerate(all_players):
         if player["chess_national_identifier"] in tournament_player:
             if player["final_score"] != current_score:
                 current_rank = index + 1
                 current_score = player["final_score"]
             player["rank"] = current_rank
-            Player.update_player_rank_in_db(player["chess_national_identifier"], player["rank"])
-    
+            Player.update_player_rank_in_db(
+                player["chess_national_identifier"], player["rank"]
+            )
+
     print("Le classement des joueurs a été mis à jour.")
     print("Voici le classement des joueurs :")
-    
+
     for player in all_players:
         if player["chess_national_identifier"] in tournament_player:
-            print(f"{player['rank']} - {player['first_name']} {player['name']} : {float(player['final_score'])} points.")
-            
+            print(
+                f"{player['rank']} - {player['first_name']} {player['name']} : {float(player['final_score'])} points."
+            )

@@ -1,7 +1,6 @@
 from controllers.match import create_match, update_matchs_score
 from models.match_model import Match
-from utils.input_validation import (validate_integer_input,
-                                    validate_match_id_input)
+from utils.input_validation import validate_integer_input, validate_match_id_input
 
 
 def display_match_creation_menu(round_id: str, player_pairs: list[list[str]]) -> None:
@@ -11,7 +10,7 @@ def display_match_creation_menu(round_id: str, player_pairs: list[list[str]]) ->
         player1, player2 = pair
         print(f"Match {i} : joueur 1, INE = {player1} versus joueur 2, INE = {player2}")
         match_id = create_match(round_id, player_pairs[i - 1])
-        print(f"Match créé avec succès ! ID : {match_id}.")
+        print(f"Match créé avec succès ! ID : {match_id}.\n")
 
 
 def get_match_winner(match_id: int) -> int:
@@ -54,3 +53,23 @@ def play_matches_and_update_scores() -> None:
         match_id = validate_match_id_input(
             "Veuillez entrer l'ID du match à jouer (0 pour quitter):\n",
         )
+
+
+def verify_matchs_have_all_been_played(round_id: int) -> bool:
+    """
+    Verify if all matches in a round have been played and prompt for missing information if necessary.
+
+    Args:
+        round_id (int): The ID of the round to verify.
+
+    Returns:
+        bool: True if all matches have been played, False otherwise.
+    """
+    all_matches_played = Match.does_all_matches_have_been_played(int(round_id))
+    while not all_matches_played:
+        print(
+            "\nTous les matchs n'ont pas encore été joués. Veuillez renseigner les informations manquantes."
+        )
+        play_matches_and_update_scores()
+        all_matches_played = Match.does_all_matches_have_been_played(int(round_id))
+    print(f"\nTous les matchs du round en cours ont été joués !")
