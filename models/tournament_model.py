@@ -84,12 +84,6 @@ class Tournament:
         tournament_data["players"].append(player_ine)
         tournaments_table.update(tournament_data, doc_ids=[tournament_id])
 
-    # @staticmethod
-    # def get_current_round_number(tournament: Dict[str, str | int]) -> int:
-    #     """Return the current round number of a tournament."""
-    #     current_round_number = len(tournament["round_list"])
-    #     return current_round_number
-
     @staticmethod
     def update_round_list_to_tournament(tournament_id: int, round_id: str) -> None:
         """Update the round list of a tournament with the new round."""
