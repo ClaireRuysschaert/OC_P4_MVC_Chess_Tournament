@@ -1,5 +1,4 @@
 import random
-from typing import Dict
 
 from models.player_model import Player
 from models.round_model import Round
@@ -9,7 +8,15 @@ from models.tournament_model import Tournament
 def assign_player_pairs(
     tournament_id: int, current_round_number: int
 ) -> list[list[str]]:
-    """Assign players pairs for the round."""
+    """
+    Assign player pairs for a tournament round.
+
+    Args:
+        tournament_id (int): The ID of the tournament.
+        current_round_number (int): The current round number.
+
+    Returns:
+        list[list[str]]: List of player pairs for the round."""
 
     if current_round_number == 0:
         players = Tournament.get_tournaments_players_ine(tournament_id)
@@ -28,9 +35,83 @@ def assign_player_pairs(
             )
         return player_pairs
     else:
-        # Other rounds, players are sorted by their scores
-        # If 2 final_scores are equal, assign competitors that haven't played together
-        pass
+        # Other rounds, players are sorted by their rank
+        # If 2 ranks are equal, assign competitors that haven't played together
+        all_players_in_db = Player.get_all_players_created_in_db()
+        tournament_player_ine = Tournament.get_tournaments_players_ine(tournament_id)
+
+        tournament_players = []
+
+        # Filter and sort tournament players by rank
+        for player in all_players_in_db:
+            if player["chess_national_identifier"] in tournament_player_ine:
+                tournament_players.append(player)
+
+        tournament_players.sort(key=lambda player: player["rank"])
+        players_that_dont_have_pairs = list(tournament_players)
+
+        player_pairs = []
+
+        player_index = 0
+
+        while len(players_that_dont_have_pairs) != 0:
+            player_one = players_that_dont_have_pairs[player_index]
+            player_two = players_that_dont_have_pairs[player_index + 1]
+
+            if player_one["rank"] < player_two["rank"]:
+                player_pairs.append(
+                    (
+                        [
+                            player_one["chess_national_identifier"],
+                            player_two["chess_national_identifier"],
+                        ]
+                    )
+                )
+                players_that_dont_have_pairs.remove(player_one)
+                players_that_dont_have_pairs.remove(player_two)
+
+            if player_one["rank"] == player_two["rank"]:
+                if (
+                    player_two["chess_national_identifier"]
+                    in player_one["met_competitors"]
+                ):
+                    print("player two in player one met competitors\n\n")
+                    while (
+                        player_two["chess_national_identifier"]
+                        in player_one["met_competitors"]
+                    ):
+                        print("player three or more in player one met competitors\n\n")
+                        player_index += 1
+                        # Handle the case where player_one have already played with the remaining players
+                        # Get the player with the closest rank from player one's rank
+                        try:
+                            player_two = players_that_dont_have_pairs[player_index + 1]
+                        except IndexError:
+                            player_two = players_that_dont_have_pairs[1]
+                            break
+
+                player_pairs.append(
+                    (
+                        [
+                            player_one["chess_national_identifier"],
+                            player_two["chess_national_identifier"],
+                        ]
+                    )
+                )
+                players_that_dont_have_pairs.remove(player_one)
+                players_that_dont_have_pairs.remove(player_two)
+
+            player_index = 0
+
+        Player.update_met_competitors_list_in_db(
+            player_one["chess_national_identifier"],
+            player_two["chess_national_identifier"],
+        )
+        Player.update_met_competitors_list_in_db(
+            player_two["chess_national_identifier"],
+            player_one["chess_national_identifier"],
+        )
+        return player_pairs
 
 
 def create_new_round(
