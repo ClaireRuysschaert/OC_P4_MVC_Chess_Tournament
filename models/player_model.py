@@ -106,3 +106,30 @@ class Player:
             {"rank": player["rank"]},
             player_query.chess_national_identifier == player_ine,
         )
+    
+    @staticmethod
+    def clean_players_after_tournament_in_db(player_ine: str) -> None:
+        """
+        Clean players infos who have participated in the tournament after it has concluded.
+        - met_competitors list is emptied
+        - final_score is reset to 0
+        - rank is reset to 0
+        """
+        player_query = Query()
+        player = players_table.get(player_query.chess_national_identifier == player_ine)
+        player["met_competitors"] = []
+        player["final_score"] = 0
+        player["rank"] = 0
+        players_table.update(
+            {"met_competitors": player["met_competitors"]},
+            player_query.chess_national_identifier == player_ine,
+        )
+        players_table.update(
+            {"final_score": player["final_score"]},
+            player_query.chess_national_identifier == player_ine,
+        )
+        players_table.update(
+            {"rank": player["rank"]},
+            player_query.chess_national_identifier == player_ine,
+        )
+        

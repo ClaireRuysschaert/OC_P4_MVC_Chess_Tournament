@@ -1,6 +1,7 @@
 from typing import Dict
 
 from models.player_model import Player
+from models.tournament_model import Tournament
 
 
 def create_player(player_info: Dict[str, int | str]) -> None:
@@ -18,3 +19,11 @@ def create_player(player_info: Dict[str, int | str]) -> None:
     player_json_format = player.player_data_to_json()
 
     player.create_player_to_db(player_json_format)
+
+def clean_players_after_tournament(tournament_id: str) -> None:
+    """Clean player information for participants of the tournament after its conclusion."""
+    tournament_players_ine = Tournament.get_tournaments_players_ine(tournament_id)
+    for player_ine in tournament_players_ine:
+       Player.clean_players_after_tournament_in_db(player_ine)
+    print("Les joueurs ont été nettoyés.")
+    
