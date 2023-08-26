@@ -25,3 +25,11 @@ def get_current_round_number(tournament_id: int) -> int:
     tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
     current_round_number = len(tournament["round_list"])
     return current_round_number
+
+def get_current_round_id(tournament_id: int) -> int:
+    """Return the current round id of a tournament.
+    It correspond to the last element of the round_list attribute of the tournament.
+    This attribute is updated at each round creation."""
+    tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
+    current_round_id = tournament["round_list"][-1]
+    return current_round_id
