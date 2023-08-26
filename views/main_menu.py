@@ -4,19 +4,25 @@ from pathlib import Path
 project_path = str(Path(__file__).parent.parent)
 sys.path.insert(0, project_path)
 
-from controllers.match import update_ranking
+from controllers.match import update_players_score, update_ranking
 from controllers.round import create_new_round
-from controllers.tournament import create_new_tournament, get_current_round_number
+from controllers.tournament import (
+    create_new_tournament,
+    get_current_round_id,
+    get_current_round_number,
+)
+from models.match_model import Match
 from models.tournament_model import Tournament
 from utils.input_validation import (
     validate_chess_national_identifier_input,
     validate_integer_input,
     validate_tournament_id_input,
+    validate_yes_no_input,
 )
 from views.match import (
+    ask_round_data_confirmation,
     display_match_creation_menu,
     play_matches_and_update_scores,
-    verify_matchs_have_all_been_played,
 )
 from views.player import display_player_creation_menu
 from views.tournament import (
@@ -67,19 +73,37 @@ def main_menu_display() -> None:  # NOSONAR
             )["number_of_rounds"]
             # Tant que le current_round_number est inférieur au nombre de round du tournoi attendu -> on veut pouvoir créer un nouveau round
             while current_round_number < tournament_number_of_round:
-                round_id, player_pairs, new_round_number = create_new_round(
-                    tournament_id, current_round_number
+                if (
+                    current_round_number == 0
+                    or Match.does_all_matches_have_been_played(
+                        get_current_round_id(tournament_id)
+                    )
+                ):
+                    current_round_id, player_pairs, new_round_number = create_new_round(
+                        tournament_id, current_round_number
+                    )
+                    print(
+                        f"\nVoici les concurrents des matchs du round {new_round_number} !"
+                    )
+                    display_match_creation_menu(current_round_id, player_pairs)
+                    print(
+                        f"\nMaintenant, place aux matchs du round {new_round_number} !"
+                    )
+                want_to_play = validate_yes_no_input(
+                    "Si vous voulez jouer les matchs, tapez 'o'. Sinon, tapez 'n'.\n>"
                 )
-                print(
-                    f"\nVoici les concurrents des matchs du round {new_round_number} !"
-                )
-                display_match_creation_menu(round_id, player_pairs)
-                print(f"\nMaintenant, place aux matchs du round {new_round_number} !")
-                play_matches_and_update_scores(round_id)
-                verify_matchs_have_all_been_played(round_id)
-                update_ranking(tournament_id)
-                current_round_number = get_current_round_number(tournament_id)
-            print("Le tournoi est terminé !")
+                if want_to_play:
+                    current_round_id = get_current_round_id(tournament_id)
+                    play_matches_and_update_scores(current_round_id)
+                    if Match.does_all_matches_have_been_played(current_round_id):
+                        ask_round_data_confirmation(current_round_id)
+                        update_players_score(current_round_id)
+                        update_ranking(tournament_id)
+                        current_round_number = get_current_round_number(tournament_id)
+                else:
+                    print("A bientôt !")
+                    break
+                # print("Le tournoi est terminé !")
 
         # 3 - Créer un joueur
         elif user_input == 3:
