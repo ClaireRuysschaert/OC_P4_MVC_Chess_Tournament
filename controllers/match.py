@@ -42,16 +42,22 @@ def update_matchs_score(match_id: int, match_winner: int) -> None:
         match["player_two_score"] = 0.5
 
     Match.update_matchs_score_in_db(match, match_id)
-    print("Les scores du match ont été mis à jour.")
+    print("Les scores du match ont été mis à jour dans la base de données.")
 
-    match_updated = Match.get_match_info_from_db(match_id)
-    Player.update_player_final_score_in_db(
-        match_updated["player_one"], match_updated["player_one_score"]
-    )
-    Player.update_player_final_score_in_db(
-        match_updated["player_two"], match_updated["player_two_score"]
-    )
-    print("Les scores des joueurs ont été mis à jour.")
+
+def update_players_score(round_id: str) -> None:
+    """
+    Update the scores of all players in a round.
+    """
+    matches = Match.get_all_matches_from_round_id(round_id)
+    for match in matches:
+        Player.update_player_final_score_in_db(
+            match["player_one"], match["player_one_score"]
+        )
+        Player.update_player_final_score_in_db(
+            match["player_two"], match["player_two_score"]
+        )
+    print("Les scores des joueurs ont été mis à jour dans la base de données.")
 
 
 def update_ranking(tournament_id: int) -> None:
@@ -80,6 +86,7 @@ def update_ranking(tournament_id: int) -> None:
             print(
                 f"{player['rank']} - {player['first_name']} {player['name']} : {float(player['final_score'])} points."
             )
+
 
 def does_match_belongs_to_round(current_round_id: str, match_id: int) -> bool:
     """Check if a match belongs to the current round."""
