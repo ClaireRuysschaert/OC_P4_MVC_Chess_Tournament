@@ -54,7 +54,13 @@ class Match:
         matches_table.update(match, doc_ids=[match_id])
 
     @staticmethod
-    def does_all_matches_have_been_played(round_id: int) -> bool:
+    def get_all_matches_from_round_id(round_id: int) -> List[Dict[str, str | list]]:
+        """Get all the matches from a round id."""
+        matches = matches_table.search(Query().round_id == round_id)
+        return matches
+    
+    @classmethod
+    def does_all_matches_have_been_played(cls, round_id: int) -> bool:
         """
         Check if all matches for a given round have been played.
 
@@ -64,7 +70,7 @@ class Match:
         Returns:
             bool: True if all matches have been played, False otherwise.
         """
-        matches = matches_table.search(Query().round_id == round_id)
+        matches = cls.get_all_matches_from_round_id(round_id)
         total_matches = len(matches)
         matches_played = 0
         for match in matches:

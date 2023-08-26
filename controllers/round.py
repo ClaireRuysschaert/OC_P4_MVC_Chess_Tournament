@@ -76,12 +76,10 @@ def assign_player_pairs(
                     player_two["chess_national_identifier"]
                     in player_one["met_competitors"]
                 ):
-                    print("player two in player one met competitors\n\n")
                     while (
                         player_two["chess_national_identifier"]
                         in player_one["met_competitors"]
                     ):
-                        print("player three or more in player one met competitors\n\n")
                         player_index += 1
                         # Handle the case where player_one have already played with the remaining players
                         # Get the player with the closest rank from player one's rank
