@@ -33,8 +33,10 @@ def update_matchs_score(match_id: int, match_winner: int) -> None:
 
     if match_winner == 1:
         match["player_one_score"] = 1
+        match["player_two_score"] = 0
     elif match_winner == 2:
         match["player_two_score"] = 1
+        match["player_one_score"] = 0
     else:
         match["player_one_score"] = 0.5
         match["player_two_score"] = 0.5
