@@ -1,4 +1,5 @@
 import random
+from typing import List, Tuple
 
 from models.player_model import Player
 from models.round_model import Round
@@ -116,7 +117,7 @@ def assign_player_pairs(
 
 def create_new_round(
     tournament_id: int, current_round_number: int
-) -> (str, list[list[str]]):
+) -> Tuple[str, List[List[str]], int]:
     """
     Create a new round instance from round_info and save it to database.
     """

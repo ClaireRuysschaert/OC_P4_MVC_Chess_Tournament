@@ -75,7 +75,7 @@ def main_menu_display() -> None:  # NOSONAR
                 )
                 display_match_creation_menu(round_id, player_pairs)
                 print(f"\nMaintenant, place aux matchs du round {new_round_number} !")
-                play_matches_and_update_scores()
+                play_matches_and_update_scores(round_id)
                 verify_matchs_have_all_been_played(round_id)
                 update_ranking(tournament_id)
                 current_round_number = get_current_round_number(tournament_id)

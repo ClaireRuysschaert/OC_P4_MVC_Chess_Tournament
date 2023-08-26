@@ -78,3 +78,11 @@ def update_ranking(tournament_id: int) -> None:
             print(
                 f"{player['rank']} - {player['first_name']} {player['name']} : {float(player['final_score'])} points."
             )
+
+def does_match_belongs_to_round(current_round_id: str, match_id: int) -> bool:
+    """Check if a match belongs to the current round."""
+    match = Match.get_match_info_from_db(match_id)
+    if match["round_id"] == current_round_id:
+        return True
+    else:
+        return False

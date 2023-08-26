@@ -1,4 +1,8 @@
-from controllers.match import create_match, update_matchs_score
+from controllers.match import (
+    create_match,
+    does_match_belongs_to_round,
+    update_matchs_score,
+)
 from models.match_model import Match
 from utils.input_validation import validate_integer_input, validate_match_id_input
 
@@ -33,26 +37,31 @@ def get_match_winner(match_id: int) -> int:
     return match_winner
 
 
-def play_matches_and_update_scores() -> None:
+def play_matches_and_update_scores(current_round_id: str) -> None:
     """
     Play matches and update scores in a tournament.
 
-    This function allows the user to input match IDs, determine match winners,
-    and update match scores accordingly. It continues the process until the user
-    chooses to exit by entering match ID '0'.
+    This function allows the user to input match IDs, it verifies if match belongs to
+    the current round, determine match winners, and update match scores accordingly.
+    It continues the process until the user chooses to exit by entering match ID '0'.
 
     Returns:
         None
     """
-    match_id = validate_match_id_input(
-        "Veuillez entrer l'ID du match à jouer:\n",
-    )
-    while match_id != 0:
-        match_winner = get_match_winner(match_id)
-        update_matchs_score(match_id, match_winner)
+    while True:
         match_id = validate_match_id_input(
             "Veuillez entrer l'ID du match à jouer (0 pour quitter):\n",
         )
+
+        if match_id == 0:
+            print("Vous avez décidé de quitter le menu de mise à jour des matchs.")
+            break
+        elif not does_match_belongs_to_round(current_round_id, match_id):
+            print("Ce match n'appartient pas au round en cours.")
+            print("Veuillez entrer un ID de match valide.")
+        else:
+            match_winner = get_match_winner(match_id)
+            update_matchs_score(match_id, match_winner)
 
 
 def verify_matchs_have_all_been_played(round_id: int) -> bool:
