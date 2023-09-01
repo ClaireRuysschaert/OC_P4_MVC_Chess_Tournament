@@ -16,13 +16,21 @@ from utils.input_validation import (
 def display_match_creation_menu(round_id: str, player_pairs: list[list[str]]) -> None:
     """Display the match creation menu."""
     print("\nLes joueurs suivant vont jouer l'un contre l'autre :")
-    
+
     table = []
     for i, pair in enumerate(player_pairs, start=1):
         player1, player2 = pair
         match_id = create_match(round_id, player_pairs[i - 1])
         table.append([i, f"{player1} vs {player2}", match_id])
-    print(tabulate(table, headers=["Numéro du match", "INE des joueurs", "ID du match"], tablefmt="double_grid", colalign=("center", "center", "center")))
+    print(
+        tabulate(
+            table,
+            headers=["Numéro du match", "INE des joueurs", "ID du match"],
+            tablefmt="double_grid",
+            colalign=("center", "center", "center"),
+        )
+    )
+
 
 def get_match_winner(match_id: int) -> int:
     """
@@ -78,15 +86,33 @@ def does_all_matchs_informations_correct(round_id: str) -> bool:
     Display matchs informations and ask the user if they are correct.
     """
     print("Veuillez vérifier que les informations des matchs sont correctes.")
-    print(f"Voici les informations des matchs du round {round_id}:")
+    print(f"\nVoici les informations des matchs du round (id : {round_id})\n")
     matches = Match.get_all_matches_from_round_id(round_id)
+    table = []
     for match in matches:
-        print(
-            f"Match {match.doc_id} : {match['player_one']} a"
-            f" {match['player_one_score']} point(s) et "
-            f"{match['player_two']} a {match['player_two_score']} point(s).\n"
+        table.append(
+            [
+                match.doc_id,
+                match["player_one"],
+                match["player_one_score"],
+                match["player_two"],
+                match["player_two_score"],
+            ]
         )
-
+    print(
+        tabulate(
+            table,
+            headers=[
+                "ID du match",
+                "Joueur 1",
+                "Score du joueur 1",
+                "Joueur 2",
+                "Score du joueur 2",
+            ],
+            tablefmt="rounded_grid",
+            colalign=("center", "center", "center", "center", "center"),
+        )
+    )
     correct_matchs_infos = validate_integer_input(
         "Si les informations sont correctes, tapez 1. Sinon, tapez 2.\n", 1, 2
     )
