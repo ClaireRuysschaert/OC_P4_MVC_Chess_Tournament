@@ -117,7 +117,7 @@ def display_and_verify_tournament_info(tournament_id: int) -> None:
     """
     tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
     print(
-        f"Vous avez décidé de charger le tournoi {tournament['name']} à "
+        f"\nVous avez décidé de charger le tournoi {tournament['name']} à "
         f"{tournament['location']} qui a débuté le {tournament['start_time']}."
     )
     number_of_players = tournament["number_of_players"]

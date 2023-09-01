@@ -1,3 +1,5 @@
+from tabulate import tabulate
+
 from controllers.match import (
     create_match,
     does_match_belongs_to_round,
@@ -13,13 +15,14 @@ from utils.input_validation import (
 
 def display_match_creation_menu(round_id: str, player_pairs: list[list[str]]) -> None:
     """Display the match creation menu."""
-    print("Les joueurs suivant vont jouer l'un contre l'autre :")
+    print("\nLes joueurs suivant vont jouer l'un contre l'autre :")
+    
+    table = []
     for i, pair in enumerate(player_pairs, start=1):
         player1, player2 = pair
-        print(f"Match {i} : joueur 1, INE = {player1} versus joueur 2, INE = {player2}")
         match_id = create_match(round_id, player_pairs[i - 1])
-        print(f"Match créé avec succès ! ID : {match_id}.\n")
-
+        table.append([i, f"{player1} vs {player2}", match_id])
+    print(tabulate(table, headers=["Numéro du match", "INE des joueurs", "ID du match"], tablefmt="double_grid", colalign=("center", "center", "center")))
 
 def get_match_winner(match_id: int) -> int:
     """
