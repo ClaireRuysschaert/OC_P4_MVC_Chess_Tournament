@@ -66,49 +66,75 @@ def main_menu_display() -> None:
         # 2 - Charger et jouer un tournoi
         elif user_input == 2:
             tournament_id = validate_tournament_id_input(
-                "Veuillez entrer l'ID du tournement à charger:\n"
+                "Veuillez entrer l'ID du tournoi à charger:\n"
             )
-            display_and_verify_tournament_info(tournament_id)
-
-            current_round_number = get_current_round_number(tournament_id)
-            tournament_number_of_round = Tournament.get_tournaments_infos_from_db(
-                tournament_id
-            )["number_of_rounds"]
-            # Tant que le current_round_number est inférieur au nombre de round du
-            # tournoi attendu -> on veut pouvoir créer un nouveau round
-            while current_round_number < tournament_number_of_round:
-                if (
-                    current_round_number == 0
-                    or Match.does_all_matches_have_been_played(
+            if not display_and_verify_tournament_info(tournament_id):
+                break
+            else:
+                current_round_number = get_current_round_number(tournament_id)
+                tournament_number_of_round = Tournament.get_tournaments_infos_from_db(
+                    tournament_id
+                )["number_of_rounds"]
+                # Tant que le current_round_number est inférieur au nombre de round du
+                # tournoi attendu -> on veut pouvoir créer un nouveau round
+                while (
+                    current_round_number < tournament_number_of_round
+                    or not Match.does_all_matches_have_been_played(
                         get_current_round_id(tournament_id)
                     )
+                    is True
                 ):
-                    current_round_id, player_pairs, new_round_number = create_new_round(
-                        tournament_id, current_round_number
+                    if (
+                        current_round_number == 0
+                        or Match.does_all_matches_have_been_played(
+                            get_current_round_id(tournament_id)
+                        )
+                        is True
+                    ):
+                        (
+                            current_round_id,
+                            player_pairs,
+                            new_round_number,
+                        ) = create_new_round(tournament_id, current_round_number)
+                        print(
+                            f"\nVoici les concurrents des matchs du round"
+                            f" {new_round_number} !"
+                        )
+                        display_match_creation_menu(current_round_id, player_pairs)
+                        print(
+                            f"\nMaintenant, place aux matchs du round {new_round_number} !"
+                        )
+                    want_to_play = validate_yes_no_input(
+                        "Si vous voulez jouer les matchs, tapez 'o'. Sinon, tapez 'n'.\n>"
                     )
-                    print(
-                        f"\nVoici les concurrents des matchs du round"
-                        f" {new_round_number} !"
+                    if want_to_play:
+                        current_round_id = get_current_round_id(tournament_id)
+                        match_id = Match.does_all_matches_have_been_played(
+                            current_round_id
+                        )
+                        print(
+                            f"Le(s) match(s) {', '.join(match_id)} n'a(ont) pas été joué(s)."
+                        )
+                        play_matches_and_update_scores(current_round_id)
+                        if Match.does_all_matches_have_been_played(current_round_id):
+                            ask_round_data_confirmation(current_round_id)
+                            update_players_score(current_round_id)
+                            update_ranking(tournament_id)
+                            current_round_number = get_current_round_number(
+                                tournament_id
+                            )
+                    else:
+                        print("A bientôt !")
+                        break
+
+                if (
+                    current_round_number == tournament_number_of_round
+                    and Match.does_all_matches_have_been_played(
+                        get_current_round_id(tournament_id)
                     )
-                    display_match_creation_menu(current_round_id, player_pairs)
-                    print(
-                        f"\nMaintenant, place aux matchs du round {new_round_number} !"
-                    )
-                want_to_play = validate_yes_no_input(
-                    "Si vous voulez jouer les matchs, tapez 'o'. Sinon, tapez 'n'.\n>"
-                )
-                if want_to_play:
-                    current_round_id = get_current_round_id(tournament_id)
-                    play_matches_and_update_scores(current_round_id)
-                    if Match.does_all_matches_have_been_played(current_round_id):
-                        ask_round_data_confirmation(current_round_id)
-                        update_players_score(current_round_id)
-                        update_ranking(tournament_id)
-                        current_round_number = get_current_round_number(tournament_id)
-                else:
-                    print("A bientôt !")
-                    break
-            print("Le tournoi est terminé !")
+                    is True
+                ):
+                    print("Le tournoi est terminé !")
 
         # 3 - Créer un joueur
         elif user_input == 3:
