@@ -60,7 +60,7 @@ class Match:
         return matches
 
     @classmethod
-    def does_all_matches_have_been_played(cls, round_id: int) -> bool:
+    def does_all_matches_have_been_played(cls, round_id: int) -> list[str] | bool:
         """
         Check if all matches for a given round have been played.
 
@@ -68,19 +68,21 @@ class Match:
             round_id (int): The identifier of the round to check.
 
         Returns:
-            bool: True if all matches have been played, False otherwise.
+            True : if all matches have been played
+            matches_id_not_been_played : if all matches have not been played.
         """
         matches = cls.get_all_matches_from_round_id(round_id)
         total_matches = len(matches)
         matches_played = 0
+        matches_id_not_been_played = []
         for match in matches:
             match_score_sum = match["player_one_score"] + match["player_two_score"]
             if int(match_score_sum) > 0:
                 matches_played += 1
             else:
-                print(f"Le match {match.doc_id} n'a pas encore été joué.")
+                matches_id_not_been_played.append(str(match.doc_id))
 
         if matches_played == total_matches:
             return True
         else:
-            return False
+            return matches_id_not_been_played
