@@ -6,7 +6,8 @@ from models.tournament_model import Tournament
 
 def validate_integer_input(prompt: str, min_value: int, max_value: int) -> int:
     """
-    Prompt the user for an integer input within a specified range (min/max_values) and validate the input.
+    Prompt the user for an integer input within a specified range (min/max_values)
+    and validate the input.
     If the input is valid, the function returns the integer.
     If not, an error message is displayed, and the user is prompted again.
     """
@@ -21,8 +22,7 @@ def validate_integer_input(prompt: str, min_value: int, max_value: int) -> int:
                     f"\nVeuillez enter un numéro entre {min_value} and {max_value}.\n"
                 )
         except ValueError:
-            print("\nERREUR /!\ ")
-            print("Veuillez entrer un numéro valide.\n")
+            print("Incorrect. Veuillez entrer un numéro valide.\n")
 
 
 def validate_string_input(prompt: str) -> str:
@@ -67,7 +67,8 @@ def validate_chess_national_identifier_input(prompt: str) -> str:
 
 def validate_birthday_date_input(prompt: str) -> str:
     """
-    Prompt the user for a birthday date in the French format (jj/mm/aaaa) and validate the input.
+    Prompt the user for a birthday date in the French format (jj/mm/aaaa)
+    and validate the input.
     If the input is valid, the function returns the formatted date.
     If not, an error message is displayed, and the user is prompted again.
     """
@@ -85,8 +86,10 @@ def validate_birthday_date_input(prompt: str) -> str:
 
 def validate_yes_no_input(prompt: str) -> bool:
     """
-    Prompt the user for a yes/no answer in the French format (o/n) and validate the input.
-    If the input is valid, the function returns True for 'o' (yes) and False for 'n' (no).
+    Prompt the user for a yes/no answer in the French format (o/n)
+    and validate the input.
+    If the input is valid, the function returns True for 'o' (yes)
+    and False for 'n' (no).
     If not, an error message is displayed, and the user is prompted again.
     """
     while True:
@@ -148,5 +151,4 @@ def validate_number_of_players_input(prompt: str) -> int:
             else:
                 print("\nVeuillez entrer un nombre pair de joueurs.\n")
         except ValueError:
-            print("\nERREUR /!\ ")
-            print("Veuillez entrer un numéro valide.\n")
+            print("Incorrect. Veuillez entrer un numéro valide.\n")

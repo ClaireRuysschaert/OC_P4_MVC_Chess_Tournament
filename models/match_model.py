@@ -58,7 +58,7 @@ class Match:
         """Get all the matches from a round id."""
         matches = matches_table.search(Query().round_id == round_id)
         return matches
-    
+
     @classmethod
     def does_all_matches_have_been_played(cls, round_id: int) -> bool:
         """

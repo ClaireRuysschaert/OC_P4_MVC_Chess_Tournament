@@ -81,7 +81,8 @@ def assign_player_pairs(
                         in player_one["met_competitors"]
                     ):
                         player_index += 1
-                        # Handle the case where player_one have already played with the remaining players
+                        # Handle the case where player_one have already played with the
+                        # remaining players
                         # Get the player with the closest rank from player one's rank
                         try:
                             player_two = players_that_dont_have_pairs[player_index + 1]

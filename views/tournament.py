@@ -102,20 +102,28 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
 
 def display_and_verify_tournament_info(tournament_id: int) -> None:
     """
-    This function displays the details of the tournament, including its name, location and start time.
-    Check if the number of players registered to the tournament is equal to the number of players expected.
-    If not, it calls the function create_add_players_to_tournament() to add the missing players.
+    This function displays the details of the tournament, including its name,
+    location and start time.
+    Check if the number of players registered to the tournament is equal to
+    the number of players expected.
+    If not, it calls the function create_add_players_to_tournament() to add
+    the missing players.
     """
     tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
-    print(f"Vous avez décidé de charger le tournoi {tournament['name']} à {tournament['location']} qui a débuté le {tournament['start_time']}.")
+    print(
+        f"Vous avez décidé de charger le tournoi {tournament['name']} à"
+        f"{tournament['location']} qui a débuté le {tournament['start_time']}."
+    )
     number_of_players = tournament["number_of_players"]
     players_registered_tournament = len(tournament["players"])
-    
+
     if number_of_players != players_registered_tournament:
         print(
-            "\nLe nombre de joueurs ajouté au tournoi n'est pas égal au nombre de joueurs attendu."
+            "\nLe nombre de joueurs ajouté au tournoi n'est pas"
+            " égal au nombre de joueurs attendu."
         )
         print(
-            f"\nVoici la liste des joueurs déjà inscrits : {players_registered_tournament}"
+            f"\nVoici la liste des joueurs déjà inscrits "
+            f": {players_registered_tournament}"
         )
         create_add_players_to_tournament(tournament_id)

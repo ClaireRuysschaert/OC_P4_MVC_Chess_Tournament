@@ -79,7 +79,8 @@ class Tournament:
 
     @classmethod
     def add_player_to_tournament(cls, tournament_id: int, player_ine: str) -> None:
-        """Add a player ine to the players list of a tournament (retrieved by its id) in the database."""
+        """Add a player ine to the players list of a tournament
+        (retrieved by its id) in the database."""
         tournament_data = cls.get_tournaments_infos_from_db(tournament_id)
         tournament_data["players"].append(player_ine)
         tournaments_table.update(tournament_data, doc_ids=[tournament_id])

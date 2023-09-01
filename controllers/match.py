@@ -7,7 +7,8 @@ from models.tournament_model import Tournament
 
 
 def create_match(round_id: str, pair_players: List[Tuple[str, str]]) -> int:
-    """Create a new match instance from round_id and player_pairs and save it to database."""
+    """Create a new match instance from round_id and player_pairs
+    and save it to database."""
     new_match = Match(round_id=round_id, pair_players=pair_players)
 
     match_json_format = new_match.match_data_to_json()
@@ -84,7 +85,8 @@ def update_ranking(tournament_id: int) -> None:
     for player in all_players:
         if player["chess_national_identifier"] in tournament_player:
             print(
-                f"{player['rank']} - {player['first_name']} {player['name']} : {float(player['final_score'])} points."
+                f"{player['rank']} - {player['first_name']}"
+                f"{player['name']} : {float(player['final_score'])} points."
             )
 
 

@@ -12,7 +12,8 @@ def display_player_creation_menu(player_ine: str) -> None:
         print("\nErreur. Le joueur existe déjà dans la base de données!\n")
     else:
         print(
-            """\nLe joueur n'existe pas dans la base de données, nous allons le créer.\n"""
+            "\nLe joueur n'existe pas dans la base de données,"
+            "nous allons le créer.\n"
         )
         player_info = get_new_player_info(player_ine)
         create_player(player_info)

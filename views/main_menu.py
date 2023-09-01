@@ -1,38 +1,40 @@
 import sys
 from pathlib import Path
 
+# Adds the project path to the system's path. This allows
+# to import modules from the project.
 project_path = str(Path(__file__).parent.parent)
 sys.path.insert(0, project_path)
 
-from controllers.match import update_players_score, update_ranking
-from controllers.round import create_new_round
-from controllers.tournament import (
+from controllers.match import update_players_score, update_ranking  # noqa: E402
+from controllers.round import create_new_round  # noqa: E402
+from controllers.tournament import (  # noqa: E402
     create_new_tournament,
     get_current_round_id,
     get_current_round_number,
 )
-from models.match_model import Match
-from models.tournament_model import Tournament
-from utils.input_validation import (
+from models.match_model import Match  # noqa: E402
+from models.tournament_model import Tournament  # noqa: E402
+from utils.input_validation import (  # noqa: E402
     validate_chess_national_identifier_input,
     validate_integer_input,
     validate_tournament_id_input,
     validate_yes_no_input,
 )
-from views.match import (
+from views.match import (  # noqa: E402
     ask_round_data_confirmation,
     display_match_creation_menu,
     play_matches_and_update_scores,
 )
-from views.player import display_player_creation_menu
-from views.tournament import (
+from views.player import display_player_creation_menu  # noqa: E402
+from views.tournament import (  # noqa: E402
     create_add_players_to_tournament,
     display_and_verify_tournament_info,
     get_tournament_info_from_user,
 )
 
 
-def main_menu_display() -> None:  # NOSONAR
+def main_menu_display() -> None:
     """First users entry point where all the functionalities are listed."""
 
     while True:
@@ -54,7 +56,8 @@ def main_menu_display() -> None:  # NOSONAR
             tournament_id = create_new_tournament(tournament_info)
             print(f"\nTournoi créé avec succès ! ID : {tournament_id}.")
             print(
-                "Veuillez vous le noter si vous voulez charger les informations de ce tournoi.\n"
+                "Veuillez vous le noter si vous voulez charger les informations"
+                "de ce tournoi.\n"
             )
             # Vérifier si les joueurs proposés par l'utilisateur sont à
             # créer ou/et à ajouter au tournoi
@@ -71,7 +74,8 @@ def main_menu_display() -> None:  # NOSONAR
             tournament_number_of_round = Tournament.get_tournaments_infos_from_db(
                 tournament_id
             )["number_of_rounds"]
-            # Tant que le current_round_number est inférieur au nombre de round du tournoi attendu -> on veut pouvoir créer un nouveau round
+            # Tant que le current_round_number est inférieur au nombre de round du
+            # tournoi attendu -> on veut pouvoir créer un nouveau round
             while current_round_number < tournament_number_of_round:
                 if (
                     current_round_number == 0
@@ -83,7 +87,8 @@ def main_menu_display() -> None:  # NOSONAR
                         tournament_id, current_round_number
                     )
                     print(
-                        f"\nVoici les concurrents des matchs du round {new_round_number} !"
+                        f"\nVoici les concurrents des matchs du round"
+                        f" {new_round_number} !"
                     )
                     display_match_creation_menu(current_round_id, player_pairs)
                     print(

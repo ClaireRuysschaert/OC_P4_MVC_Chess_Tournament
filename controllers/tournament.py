@@ -26,6 +26,7 @@ def get_current_round_number(tournament_id: int) -> int:
     current_round_number = len(tournament["round_list"])
     return current_round_number
 
+
 def get_current_round_id(tournament_id: int) -> int:
     """Return the current round id of a tournament.
     It correspond to the last element of the round_list attribute of the tournament.

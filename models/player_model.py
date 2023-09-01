@@ -30,7 +30,10 @@ class Player:
         self.met_competitors = []
 
     def __str__(self):
-        return f"Player {self.first_name} {self.name} ranking is {self.rank} with {self.final_score} points."
+        return (
+            f"Player {self.first_name} {self.name} ranking is "
+            f"{self.rank} with {self.final_score} points."
+        )
 
     def player_data_to_json(self) -> Dict[str, str | int]:
         """Return player informations in dict/json format."""
@@ -79,7 +82,8 @@ class Player:
 
     @staticmethod
     def update_met_competitors_list_in_db(player_ine: str, competitor_ine: str) -> None:
-        """Add the competitor id in the met_competitors list of a player in the database."""
+        """Add the competitor id in the met_competitors list of a player
+        in the database."""
         player_query = Query()
         player = players_table.get(player_query.chess_national_identifier == player_ine)
         player["met_competitors"].append(competitor_ine)
@@ -106,11 +110,12 @@ class Player:
             {"rank": player["rank"]},
             player_query.chess_national_identifier == player_ine,
         )
-    
+
     @staticmethod
     def clean_players_after_tournament_in_db(player_ine: str) -> None:
         """
-        Clean players infos who have participated in the tournament after it has concluded.
+        Clean players infos who have participated in the tournament
+        after it has concluded.
         - met_competitors list is emptied
         - final_score is reset to 0
         - rank is reset to 0
@@ -132,4 +137,3 @@ class Player:
             {"rank": player["rank"]},
             player_query.chess_national_identifier == player_ine,
         )
-        
