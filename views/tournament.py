@@ -10,6 +10,7 @@ from utils.input_validation import (
 from views.player import display_player_creation_menu
 from tabulate import tabulate
 
+
 def get_tournament_info_from_user() -> dict:
     """Get the tournament informations from the user."""
 
@@ -37,7 +38,7 @@ def get_tournament_info_from_user() -> dict:
     return tournament_info
 
 
-def create_add_players_to_tournament(tournament_id: int) -> None:
+def create_add_players_to_tournament(tournament_id: int) -> bool:
     """
     Add players to a tournament in the database.
 
@@ -60,53 +61,70 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
             int(tournament_number_of_players) - len(players_ine_list),
             "joueur(s) restant(s) à ajouter au tournoi.\n",
         )
-        player_ine = validate_chess_national_identifier_input(
-            "\nVeuillez entrer l'identifiant national d'échec du joueur :\n>"
+        want_to_add_player = validate_yes_no_input(
+            "Voulez vous ajouter un joueur au tournoi ? (o/n)\n"
+        )
+        if not want_to_add_player:
+            print("\nVous avez choisi de ne pas ajouter de joueur au tournoi.")
+            break
+        else:
+            player_ine = validate_chess_national_identifier_input(
+                "\nVeuillez entrer l'identifiant national d'échec du joueur :\n>"
+            )
+
+            if Tournament.does_player_exists_in_tournament_list(
+                tournament_id, player_ine
+            ):
+                print("\nLe joueur est déjà inscrit dans le tournoi!")
+                print("\nVeuillez entrer un autre identifiant.")
+            elif Player.does_player_exists_in_db(player_ine):
+                print("\nLe joueur existe dans la base de données!")
+                is_player_to_add = validate_yes_no_input(
+                    "\nVoulez vous bien l'ajouter au tournoi ? (o/n)\n"
+                )
+                if is_player_to_add:
+                    Tournament.add_player_to_tournament(tournament_id, player_ine)
+                    players_ine_list = Tournament.get_tournaments_infos_from_db(
+                        tournament_id
+                    )["players"]
+                    print("\nLe joueur a été ajouté au tournoi.")
+                else:
+                    print("\nLe joueur n'a pas été ajouté au tournoi.")
+            else:
+                print("\nLe joueur n'existe pas dans la base de données!")
+                is_player_to_create = validate_yes_no_input(
+                    "\nVoulez vous bien le créer ? (o/n)\n"
+                )
+                if is_player_to_create:
+                    display_player_creation_menu(player_ine)
+                    Tournament.add_player_to_tournament(tournament_id, player_ine)
+                    players_ine_list = Tournament.get_tournaments_infos_from_db(
+                        tournament_id
+                    )["players"]
+                    print("\nLe joueur a été créé et ajouté au tournoi.")
+                else:
+                    print("\nLe joueur n'a pas été créé ni ajouté au tournoi.")
+
+    if int(tournament_number_of_players) == len(players_ine_list):
+        print("\nTous les joueurs ont été ajoutés au tournoi.")
+        print("\nVoici la liste finale des ine des joueurs du tournoi :")
+        # Pretty print the list of players
+        table = []
+        for player in players_ine_list:
+            table.append([player])
+        print(
+            tabulate(
+                table,
+                headers=["INE des joueurs du tournoi"],
+                tablefmt="double_outline",
+                colalign=("center",),
+            )
         )
 
-        if Tournament.does_player_exists_in_tournament_list(tournament_id, player_ine):
-            print("\nLe joueur est déjà inscrit dans le tournoi!")
-            print("\nVeuillez entrer un autre identifiant.")
-        elif Player.does_player_exists_in_db(player_ine):
-            print("\nLe joueur existe dans la base de données!")
-            is_player_to_add = validate_yes_no_input(
-                "\nVoulez vous bien l'ajouter au tournoi ? (o/n)\n"
-            )
-            if is_player_to_add:
-                Tournament.add_player_to_tournament(tournament_id, player_ine)
-                players_ine_list = Tournament.get_tournaments_infos_from_db(
-                    tournament_id
-                )["players"]
-                print("\nLe joueur a été ajouté au tournoi.")
-            else:
-                print("\nLe joueur n'a pas été ajouté au tournoi.")
-        else:
-            print("\nLe joueur n'existe pas dans la base de données!")
-            is_player_to_create = validate_yes_no_input(
-                "\nVoulez vous bien le créer ? (o/n)\n"
-            )
-            if is_player_to_create:
-                display_player_creation_menu(player_ine)
-                Tournament.add_player_to_tournament(tournament_id, player_ine)
-                players_ine_list = Tournament.get_tournaments_infos_from_db(
-                    tournament_id
-                )["players"]
-                print("\nLe joueur a été créé et ajouté au tournoi.")
-            else:
-                print("\nLe joueur n'a pas été créé ni ajouté au tournoi.")
-
-    print("\nTous les joueurs ont été ajoutés au tournoi.")
-    print("\nVoici la liste finale des ine des joueurs du tournoi :")
-    # Pretty print the list of players
-    table = []
-    for player in players_ine_list:
-        table.append([player])
-    print(tabulate(
-        table, headers=["INE des joueurs du tournoi"], tablefmt="double_outline", colalign=("center",)
-    ))
+    return want_to_add_player
 
 
-def display_and_verify_tournament_info(tournament_id: int) -> None:
+def display_and_verify_tournament_info(tournament_id: int) -> bool:
     """
     This function displays the details of the tournament, including its name,
     location and start time.
@@ -123,7 +141,7 @@ def display_and_verify_tournament_info(tournament_id: int) -> None:
     number_of_players = tournament["number_of_players"]
     players_registered_tournament = len(tournament["players"])
 
-    if number_of_players != players_registered_tournament:
+    while number_of_players != players_registered_tournament:
         print(
             "\nLe nombre de joueurs ajouté au tournoi n'est pas"
             " égal au nombre de joueurs attendu."
@@ -132,4 +150,15 @@ def display_and_verify_tournament_info(tournament_id: int) -> None:
             f"\nVoici le nombre de joueurs déjà inscrits au tournoi "
             f": {players_registered_tournament}"
         )
-        create_add_players_to_tournament(tournament_id)
+        want_to_continue = create_add_players_to_tournament(tournament_id)
+        if not want_to_continue:
+            break
+        else:
+            tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
+            number_of_players = tournament["number_of_players"]
+            players_registered_tournament = len(tournament["players"])
+
+    try:
+        return want_to_continue
+    except UnboundLocalError:
+        return True
