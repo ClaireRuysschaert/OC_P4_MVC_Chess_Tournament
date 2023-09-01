@@ -1,5 +1,7 @@
 from typing import List, Tuple
 
+from tabulate import tabulate
+
 from models.match_model import Match
 from models.player_model import Player
 from models.round_model import Round
@@ -79,15 +81,27 @@ def update_ranking(tournament_id: int) -> None:
                 player["chess_national_identifier"], player["rank"]
             )
 
-    print("Le classement des joueurs a été mis à jour.")
+    print("\nLe classement des joueurs a été mis à jour.")
     print("Voici le classement des joueurs :")
-
+    table = []
     for player in all_players:
         if player["chess_national_identifier"] in tournament_player:
-            print(
-                f"{player['rank']} - {player['first_name']}"
-                f"{player['name']} : {float(player['final_score'])} points."
+            table.append(
+                [
+                    player["rank"],
+                    player["first_name"],
+                    player["name"],
+                    float(player["final_score"]),
+                ]
             )
+    print(
+        tabulate(
+            table,
+            headers=["Rang", "Prénom", "Nom", "Score"],
+            tablefmt="rounded_grid",
+            colalign=("center", "center", "center", "center"),
+        )
+    )
 
 
 def does_match_belongs_to_round(current_round_id: str, match_id: int) -> bool:
