@@ -8,7 +8,7 @@ from utils.input_validation import (
     validate_yes_no_input,
 )
 from views.player import display_player_creation_menu
-
+from tabulate import tabulate
 
 def get_tournament_info_from_user() -> dict:
     """Get the tournament informations from the user."""
@@ -97,7 +97,13 @@ def create_add_players_to_tournament(tournament_id: int) -> None:
 
     print("\nTous les joueurs ont été ajoutés au tournoi.")
     print("\nVoici la liste finale des ine des joueurs du tournoi :")
-    print(f"{players_ine_list}\n")
+    # Pretty print the list of players
+    table = []
+    for player in players_ine_list:
+        table.append([player])
+    print(tabulate(
+        table, headers=["INE des joueurs du tournoi"], tablefmt="double_outline", colalign=("center",)
+    ))
 
 
 def display_and_verify_tournament_info(tournament_id: int) -> None:
@@ -111,7 +117,7 @@ def display_and_verify_tournament_info(tournament_id: int) -> None:
     """
     tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
     print(
-        f"Vous avez décidé de charger le tournoi {tournament['name']} à"
+        f"Vous avez décidé de charger le tournoi {tournament['name']} à "
         f"{tournament['location']} qui a débuté le {tournament['start_time']}."
     )
     number_of_players = tournament["number_of_players"]
@@ -123,7 +129,7 @@ def display_and_verify_tournament_info(tournament_id: int) -> None:
             " égal au nombre de joueurs attendu."
         )
         print(
-            f"\nVoici la liste des joueurs déjà inscrits "
+            f"\nVoici le nombre de joueurs déjà inscrits au tournoi "
             f": {players_registered_tournament}"
         )
         create_add_players_to_tournament(tournament_id)

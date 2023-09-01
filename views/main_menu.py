@@ -108,7 +108,7 @@ def main_menu_display() -> None:
                 else:
                     print("A bientôt !")
                     break
-                # print("Le tournoi est terminé !")
+            print("Le tournoi est terminé !")
 
         # 3 - Créer un joueur
         elif user_input == 3:
