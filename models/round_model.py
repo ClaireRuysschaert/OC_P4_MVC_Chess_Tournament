@@ -67,3 +67,10 @@ class Round:
         """Get the round informations from the database."""
         round = rounds_table.get(doc_id=str(round_id))
         return round
+
+    @staticmethod
+    def update_round_end_time(round_id: str) -> None:
+        """Update the end time of the round in the database."""
+        round = rounds_table.get(doc_id=str(round_id))
+        round["end_time"] = Round.get_time_now()
+        rounds_table.update(round, doc_ids=[int(round_id)])

@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+from models.round_model import Round
+
 # Adds the project path to the system's path. This allows
 # to import modules from the project.
 project_path = str(Path(__file__).parent.parent)
@@ -126,6 +128,8 @@ def main_menu_display() -> None:
                         play_matches_and_update_scores(current_round_id)
                         if Match.does_all_matches_have_been_played(current_round_id):
                             ask_round_data_confirmation(current_round_id)
+                            # Mettre à jour le "end_time" du round
+                            Round.update_round_end_time(current_round_id)
                             update_players_score(current_round_id)
                             update_ranking(tournament_id)
                             current_round_number = get_current_round_number(
