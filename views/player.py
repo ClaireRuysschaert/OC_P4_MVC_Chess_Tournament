@@ -1,6 +1,8 @@
 from typing import Dict
 
-from controllers.player import create_player
+from tabulate import tabulate
+
+from controllers.player import create_player, get_players_from_alphabetic_order
 from models.player_model import Player
 from utils.input_validation import validate_birthday_date_input, validate_string_input
 
@@ -42,3 +44,14 @@ def get_new_player_info(player_ine: str) -> Dict[str, int | str]:
         "final_score": 0,
         "rank": 0,
     }
+
+
+def report_display(user_input: int, tournament_id: int = None) -> None:
+    if user_input == 1:  # Liste des joueurs par ordre alphabétique
+        sorted_players = get_players_from_alphabetic_order()
+        table = []
+        keys_to_print = list(sorted_players[0].keys())[:4]
+        for player in sorted_players:
+            table.append([player[key] for key in keys_to_print])
+        print("\nVoici la liste des joueurs par ordre alphabétique :")
+        print(tabulate(table, headers=keys_to_print, tablefmt="pretty"))

@@ -28,3 +28,10 @@ def clean_players_after_tournament(tournament_id: str) -> None:
     for player_ine in tournament_players_ine:
         Player.clean_players_after_tournament_in_db(player_ine)
     print("Les joueurs ont été nettoyés.")
+
+
+def get_players_from_alphabetic_order() -> list[dict[str, str | int]]:
+    """Return all players from database in alphabetic order."""
+    players = Player.get_all_players_created_in_db()
+    players.sort(key=lambda player: player["name"])
+    return players
