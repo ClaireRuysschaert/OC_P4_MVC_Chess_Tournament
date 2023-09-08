@@ -14,7 +14,6 @@ class Player:
         first_name: str,
         name: str,
         birthdate: str,
-        tournament_score=0,
         final_score=0,
         rank=0,
         chess_national_identifier="",
@@ -24,7 +23,6 @@ class Player:
         self.name = name
         self.birthdate = birthdate
         self.ine = chess_national_identifier
-        self.tournament_score = tournament_score
         self.final_score = final_score
         self.rank = rank
         self.met_competitors = []
@@ -42,7 +40,6 @@ class Player:
             "name": self.name,
             "birthdate": self.birthdate,
             "chess_national_identifier": self.ine,
-            "tournament_score": self.tournament_score,
             "final_score": self.final_score,
             "rank": self.rank,
             "met_competitors": self.met_competitors,
