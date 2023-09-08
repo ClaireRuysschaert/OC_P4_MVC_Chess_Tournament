@@ -26,7 +26,7 @@ from views.match import (  # noqa: E402
     display_match_creation_menu,
     play_matches_and_update_scores,
 )
-from views.player import display_player_creation_menu  # noqa: E402
+from views.player import display_player_creation_menu, report_display  # noqa: E402
 from views.tournament import (  # noqa: E402
     create_add_players_to_tournament,
     display_and_verify_tournament_info,
@@ -147,8 +147,22 @@ def main_menu_display() -> None:
         # 4 - Afficher des rapports
         elif user_input == 4:
             print("to be continued...")
-            # afficher les résultats
-            # mettre à jour le classement
+            user_input = validate_integer_input(
+                "\nQuelle rapport voulez vous afficher ?\n\n"
+                "1 - Liste de tous les joueurs par ordre alphabétique\n"
+                "2 - Liste de tous les tournois\n"
+                "3 - Nom et dates d’un tournoi donné\n"
+                "4 - Liste des joueurs du tournoi par ordre alphabétique\n"
+                "5 - Liste de tous les tours du tournoi et de tous les matchs du tour.\n"
+                "0 - Quitter\n\n> ",
+                0,
+                5,
+            )
+            if user_input == 3 or user_input == 4 or user_input == 5:
+                tournament_id = validate_tournament_id_input(
+                    "Veuillez entrer l'ID du tournoi :\n"
+                )
+            report_display(user_input, tournament_id)
 
         # Quitter
         else:
