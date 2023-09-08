@@ -61,3 +61,9 @@ class Round:
         round = rounds_table.get(doc_id=str(round_id))
         round["match_list"].append(match_id)
         rounds_table.update(round, doc_ids=[int(round_id)])
+
+    @staticmethod
+    def get_round_infos_from_db(round_id: str) -> Dict[str, str | list]:
+        """Get the round informations from the database."""
+        round = rounds_table.get(doc_id=str(round_id))
+        return round

@@ -1,5 +1,10 @@
+from tabulate import tabulate
+
 from controllers.player import get_sorted_players_by_alphabetic_order_by_player_ine
+from controllers.tournament import get_all_tournament_round_id
+from models.match_model import Match
 from models.player_model import Player
+from models.round_model import Round
 from models.tournament_model import Tournament
 from utils.input_validation import (
     validate_chess_national_identifier_input,
@@ -9,7 +14,6 @@ from utils.input_validation import (
     validate_yes_no_input,
 )
 from views.player import display_player_creation_menu
-from tabulate import tabulate
 
 
 def get_tournament_info_from_user() -> dict:
@@ -182,7 +186,7 @@ def display_all_tournaments() -> None:
     )
 
 
-def display_tournament_name_and_dates(tournament_id) -> None:
+def display_tournament_name_and_dates(tournament_id: int) -> None:
     """Display the name and dates of a tournament."""
     tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
     print("\nVoici le nom et les dates du tournoi :\n")
@@ -194,10 +198,79 @@ def display_tournament_name_and_dates(tournament_id) -> None:
 def display_players_by_alphabetical_order_from_tournament(tournament_id) -> None:
     """Display all players from database in alphabetical order from tournament."""
     tournament_players_ine = Tournament.get_tournaments_players_ine(tournament_id)
-    players = get_sorted_players_by_alphabetic_order_by_player_ine(tournament_players_ine)
+    players = get_sorted_players_by_alphabetic_order_by_player_ine(
+        tournament_players_ine
+    )
 
     table = []
     for player in players:
         table.append([player[key] for key in player.keys()])
     print("\nVoici la liste des joueurs par ordre alphabétique associé au tournoi:")
     print(tabulate(table, list(players[0].keys()), tablefmt="pretty"))
+
+
+def display_tournament_rounds_and_matches(tournament_id: int) -> None:
+    """
+    Display information about all rounds and matches of a tournament.
+
+    Args:
+        tournament_id (int): The ID of the tournament to display information for.
+
+    This function retrieves information about all rounds and their matches for a given tournament
+    and displays it in a tabular format. It includes details such as round names, start and end times,
+    match IDs, tournament ID, and information about the players and their scores for each match.
+    """
+    rounds_id = get_all_tournament_round_id(tournament_id)
+
+    table = []
+    first_match = None
+    second_match = None
+
+    for round_id in rounds_id:
+        round_obj = Round.get_round_infos_from_db(round_id)
+
+        for match_id in round_obj["match_list"]:
+            if not first_match:
+                first_match = Match.get_match_info_from_db(match_id)
+            elif not second_match:
+                second_match = Match.get_match_info_from_db(match_id)
+
+        table.append(
+            [
+                round_obj["name"],
+                round_obj["start_time"],
+                round_obj["end_time"],
+                round_obj["match_list"],
+                round_obj["tournament_id"],
+                f"Joueur 1: {first_match['player_one']}, score: {first_match['player_one_score']}\n"
+                f"Joueur 2: {first_match['player_two']}, score: {first_match['player_two_score']}",
+                f"Joueur 1: {second_match['player_one']}, score: {second_match['player_one_score']}\n"
+                f"Joueur 2: {second_match['player_two']}, score: {second_match['player_two_score']}",
+            ]
+        )
+
+    print("\nVoici tous les tours du tournoi et tous les matchs du tour :")
+    print(
+        tabulate(
+            table,
+            headers=[
+                "Nom",
+                "Début",
+                "Fin",
+                "Id Matchs",
+                "Id Tournoi",
+                "Concurrents et scores du match 1",
+                "Concurrents et scores du match 2",
+            ],
+            tablefmt="rounded_grid",
+            colalign=(
+                "center",
+                "center",
+                "center",
+                "center",
+                "center",
+                "center",
+                "center",
+            ),
+        )
+    )

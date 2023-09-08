@@ -9,7 +9,7 @@ sys.path.insert(0, project_path)
 from controllers.match import update_players_score, update_ranking  # noqa: E402
 from controllers.player import clean_players_after_tournament  # noqa: E402
 from controllers.round import create_new_round  # noqa: E402
-from controllers.tournament import (  # noqa: E402
+from controllers.tournament import (    # noqa: E402
     create_new_tournament,
     get_current_round_id,
     get_current_round_number,
@@ -37,6 +37,7 @@ from views.tournament import (  # noqa: E402
     display_and_verify_tournament_info,
     display_players_by_alphabetical_order_from_tournament,
     display_tournament_name_and_dates,
+    display_tournament_rounds_and_matches,
     get_tournament_info_from_user,
 )
 
@@ -178,7 +179,8 @@ def main_menu_display() -> None:
                 display_tournament_name_and_dates(tournament_id)
             elif user_input == 4:
                 display_players_by_alphabetical_order_from_tournament(tournament_id)
-
+            elif user_input == 5:
+                display_tournament_rounds_and_matches(tournament_id)
         # Quitter
         else:
             quit()

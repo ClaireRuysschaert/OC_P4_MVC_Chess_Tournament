@@ -34,3 +34,12 @@ def get_current_round_id(tournament_id: int) -> int:
     tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
     current_round_id = tournament["round_list"][-1]
     return current_round_id
+
+
+def get_all_tournament_round_id(tournament_id: int) -> list[int]:
+    """Return all the round id of a tournament.
+    It correspond to all the id stored in the round_list attribute
+    of the tournament."""
+    tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
+    all_round_id = tournament["round_list"]
+    return all_round_id
