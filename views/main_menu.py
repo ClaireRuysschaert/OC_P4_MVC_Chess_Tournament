@@ -27,9 +27,10 @@ from views.match import (  # noqa: E402
     display_match_creation_menu,
     play_matches_and_update_scores,
 )
-from views.player import display_player_creation_menu, report_display  # noqa: E402
+from views.player import display_player_creation_menu, display_players_by_alphabetical_order  # noqa: E402
 from views.tournament import (  # noqa: E402
     create_add_players_to_tournament,
+    display_all_tournaments,
     display_and_verify_tournament_info,
     get_tournament_info_from_user,
 )
@@ -149,7 +150,6 @@ def main_menu_display() -> None:
 
         # 4 - Afficher des rapports
         elif user_input == 4:
-            print("to be continued...")
             user_input = validate_integer_input(
                 "\nQuelle rapport voulez vous afficher ?\n\n"
                 "1 - Liste de tous les joueurs par ordre alphabétique\n"
@@ -165,7 +165,10 @@ def main_menu_display() -> None:
                 tournament_id = validate_tournament_id_input(
                     "Veuillez entrer l'ID du tournoi :\n"
                 )
-            report_display(user_input, tournament_id)
+            if user_input == 1:
+                display_players_by_alphabetical_order()
+            elif user_input == 2:
+                display_all_tournaments()
 
         # Quitter
         else:

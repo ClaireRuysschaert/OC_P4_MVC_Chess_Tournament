@@ -47,27 +47,12 @@ def get_new_player_info(player_ine: str) -> Dict[str, int | str]:
     }
 
 
-def report_display(user_input: int, tournament_id: int = None) -> None:
-    if user_input == 1:  # Liste des joueurs par ordre alphabétique
-        sorted_players = get_players_from_alphabetic_order()
-        table = []
-        keys_to_print = list(sorted_players[0].keys())[:4]
-        for player in sorted_players:
-            table.append([player[key] for key in keys_to_print])
-        print("\nVoici la liste des joueurs par ordre alphabétique :")
-        print(tabulate(table, headers=keys_to_print, tablefmt="pretty"))
-
-    elif user_input == 2:  # Liste de tous les tournois
-        all_tournaments = Tournament.get_all_tournaments_from_db()
-        table = []
-        for tournament in all_tournaments:
-            table.append([tournament[key] for key in tournament.keys()])
-        print("\nVoici la liste de tous les tournois :")
-        print(
-            tabulate(
-                table,
-                headers=tournament.keys(),
-                tablefmt="fancy_grid",
-                maxcolwidths=[12, 12, 12, 12, 12, 12, 12, 12],
-            )
-        )
+def display_players_by_alphabetical_order() -> None:
+    """Display all players from database in alphabetical order."""
+    sorted_players = get_players_from_alphabetic_order()
+    table = []
+    keys_to_print = list(sorted_players[0].keys())[:4]
+    for player in sorted_players:
+        table.append([player[key] for key in keys_to_print])
+    print("\nVoici la liste des joueurs par ordre alphabétique :")
+    print(tabulate(table, headers=keys_to_print, tablefmt="pretty"))

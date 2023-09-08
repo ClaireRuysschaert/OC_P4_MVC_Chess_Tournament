@@ -162,3 +162,19 @@ def display_and_verify_tournament_info(tournament_id: int) -> bool:
         return want_to_continue
     except UnboundLocalError:
         return True
+
+def display_all_tournaments() -> None:
+    """Display all tournaments from database."""
+    all_tournaments = Tournament.get_all_tournaments_from_db()
+    table = []
+    for tournament in all_tournaments:
+        table.append([tournament[key] for key in tournament.keys()])
+    print("\nVoici la liste de tous les tournois :")
+    print(
+        tabulate(
+            table,
+            headers=tournament.keys(),
+            tablefmt="fancy_grid",
+            maxcolwidths=[12, 12, 12, 12, 12, 12, 12, 12],
+        )
+    )
