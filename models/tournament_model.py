@@ -1,6 +1,8 @@
 import datetime
 from typing import Dict
 
+from tinydb import Query
+
 from data.database import tournaments_table
 from utils.data_folder_management import create_data_folder_if_not_exists
 
@@ -98,3 +100,10 @@ class Tournament:
         tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
         tournament["end_time"] = Tournament.get_time_now()
         tournaments_table.update(tournament, doc_ids=[tournament_id])
+
+    @staticmethod
+    def get_all_tournaments_from_db() -> list[Dict[str, str | int]]:
+        """Get all the tournaments created in the database."""
+        tournament_query = Query()
+        all_tournaments = tournaments_table.search(tournament_query.doc_id.all)
+        return all_tournaments

@@ -56,8 +56,7 @@ class Player:
     @staticmethod
     def get_all_players_created_in_db() -> List[Dict[str, str | int]]:
         """Get all the players created in the database by their id."""
-        player_query = Query()  # NOSONAR
-        # Retrieve all players by their id
+        player_query = Query()
         all_players_created = players_table.search(player_query.doc_id.all)
         return all_players_created
 

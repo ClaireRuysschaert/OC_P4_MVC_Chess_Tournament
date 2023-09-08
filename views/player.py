@@ -4,6 +4,7 @@ from tabulate import tabulate
 
 from controllers.player import create_player, get_players_from_alphabetic_order
 from models.player_model import Player
+from models.tournament_model import Tournament
 from utils.input_validation import validate_birthday_date_input, validate_string_input
 
 
@@ -55,3 +56,18 @@ def report_display(user_input: int, tournament_id: int = None) -> None:
             table.append([player[key] for key in keys_to_print])
         print("\nVoici la liste des joueurs par ordre alphabétique :")
         print(tabulate(table, headers=keys_to_print, tablefmt="pretty"))
+
+    elif user_input == 2:  # Liste de tous les tournois
+        all_tournaments = Tournament.get_all_tournaments_from_db()
+        table = []
+        for tournament in all_tournaments:
+            table.append([tournament[key] for key in tournament.keys()])
+        print("\nVoici la liste de tous les tournois :")
+        print(
+            tabulate(
+                table,
+                headers=tournament.keys(),
+                tablefmt="fancy_grid",
+                maxcolwidths=[12, 12, 12, 12, 12, 12, 12, 12],
+            )
+        )
