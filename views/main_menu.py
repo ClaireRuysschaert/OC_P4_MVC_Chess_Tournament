@@ -7,6 +7,7 @@ project_path = str(Path(__file__).parent.parent)
 sys.path.insert(0, project_path)
 
 from controllers.match import update_players_score, update_ranking  # noqa: E402
+from controllers.player import clean_players_after_tournament  # noqa: E402
 from controllers.round import create_new_round  # noqa: E402
 from controllers.tournament import (  # noqa: E402
     create_new_tournament,
@@ -136,6 +137,7 @@ def main_menu_display() -> None:
                 ):
                     print("Le tournoi est terminé !")
                     Tournament.update_tournament_end_time(tournament_id)
+                    clean_players_after_tournament(tournament_id)
 
         # 3 - Créer un joueur
         elif user_input == 3:
