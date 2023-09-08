@@ -1,8 +1,6 @@
 import sys
 from pathlib import Path
 
-from models.round_model import Round
-
 # Adds the project path to the system's path. This allows
 # to import modules from the project.
 project_path = str(Path(__file__).parent.parent)
@@ -17,6 +15,7 @@ from controllers.tournament import (    # noqa: E402
     get_current_round_number,
 )
 from models.match_model import Match  # noqa: E402
+from models.round_model import Round  # noqa: E402
 from models.tournament_model import Tournament  # noqa: E402
 from utils.input_validation import (  # noqa: E402
     validate_chess_national_identifier_input,
@@ -126,9 +125,8 @@ def main_menu_display() -> None:
                             f"Le(s) match(s) {', '.join(match_id)} n'a(ont) pas été joué(s)."
                         )
                         play_matches_and_update_scores(current_round_id)
-                        if Match.does_all_matches_have_been_played(current_round_id):
+                        if Match.does_all_matches_have_been_played(current_round_id) is True:
                             ask_round_data_confirmation(current_round_id)
-                            # Mettre à jour le "end_time" du round
                             Round.update_round_end_time(current_round_id)
                             update_players_score(current_round_id)
                             update_ranking(tournament_id)
