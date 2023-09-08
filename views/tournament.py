@@ -179,9 +179,19 @@ def display_all_tournaments() -> None:
     print(
         tabulate(
             table,
-            headers=tournament.keys(),
-            tablefmt="fancy_grid",
-            maxcolwidths=[12, 12, 12, 12, 12, 12, 12, 12],
+            headers=[
+                "Nom",
+                "Lieu",
+                "Nombre de joueurs",
+                "Nombre de tours",
+                "Date de début",
+                "Date de fin",
+                "Joueurs inscrits",
+                "Liste des tours",
+                "Description",
+            ],
+            tablefmt="rounded_grid",
+            maxcolwidths=[12, 8, 4, 4, 10, 10, 10, 4, 12],
         )
     )
 
@@ -206,7 +216,21 @@ def display_players_by_alphabetical_order_from_tournament(tournament_id) -> None
     for player in players:
         table.append([player[key] for key in player.keys()])
     print("\nVoici la liste des joueurs par ordre alphabétique associé au tournoi:")
-    print(tabulate(table, list(players[0].keys()), tablefmt="pretty"))
+    print(
+        tabulate(
+            table,
+            headers=[
+                "Prénom",
+                "Nom",
+                "Date de naissance",
+                "INE",
+                "Score",
+                "Rang",
+                "Joueurs rencontrés",
+            ],
+            tablefmt="pretty",
+        )
+    )
 
 
 def display_tournament_rounds_and_matches(tournament_id: int) -> None:
@@ -222,55 +246,49 @@ def display_tournament_rounds_and_matches(tournament_id: int) -> None:
     """
     rounds_id = get_all_tournament_round_id(tournament_id)
 
+    headers = ["Nom", "Début", "Fin", "Id Matchs"]
+
+    max_matches = 0
+
+    # Calculate the maximum number of matches in any round
+    for round_id in rounds_id:
+        round_obj = Round.get_round_infos_from_db(round_id)
+        max_matches = max(max_matches, len(round_obj["match_list"]))
+
+    # Dynamically add headers for each match
+    for match_number in range(1, max_matches + 1):
+        headers.append(f"Match {match_number}")
+
     table = []
-    first_match = None
-    second_match = None
 
     for round_id in rounds_id:
         round_obj = Round.get_round_infos_from_db(round_id)
 
+        row = [
+            round_obj["name"],
+            round_obj["start_time"],
+            round_obj["end_time"],
+            round_obj["match_list"],
+        ]
+
+        # Dynamically add player information for each match
         for match_id in round_obj["match_list"]:
-            if not first_match:
-                first_match = Match.get_match_info_from_db(match_id)
-            elif not second_match:
-                second_match = Match.get_match_info_from_db(match_id)
+            match_info = Match.get_match_info_from_db(match_id)
+            player_one = f"Joueur 1: {match_info['player_one']}, score: {match_info['player_one_score']}"
+            player_two = f"Joueur 2: {match_info['player_two']}, score: {match_info['player_two_score']}"
+            row.append(f"{player_one}\n{player_two}")
 
-        table.append(
-            [
-                round_obj["name"],
-                round_obj["start_time"],
-                round_obj["end_time"],
-                round_obj["match_list"],
-                round_obj["tournament_id"],
-                f"Joueur 1: {first_match['player_one']}, score: {first_match['player_one_score']}\n"
-                f"Joueur 2: {first_match['player_two']}, score: {first_match['player_two_score']}",
-                f"Joueur 1: {second_match['player_one']}, score: {second_match['player_one_score']}\n"
-                f"Joueur 2: {second_match['player_two']}, score: {second_match['player_two_score']}",
-            ]
-        )
+        table.append(row)
 
-    print("\nVoici tous les tours du tournoi et tous les matchs du tour :")
+    print(
+        f"\nVoici tous les tours du tournoi {round_obj['tournament_id']} et tous les matchs du tour :"
+    )
     print(
         tabulate(
             table,
-            headers=[
-                "Nom",
-                "Début",
-                "Fin",
-                "Id Matchs",
-                "Id Tournoi",
-                "Concurrents et scores du match 1",
-                "Concurrents et scores du match 2",
-            ],
+            headers=headers,
             tablefmt="rounded_grid",
-            colalign=(
-                "center",
-                "center",
-                "center",
-                "center",
-                "center",
-                "center",
-                "center",
-            ),
+            maxcolwidths=[12, 12, 12, 10] + [30] * max_matches,
+            colalign=["center"] * len(headers),
         )
     )

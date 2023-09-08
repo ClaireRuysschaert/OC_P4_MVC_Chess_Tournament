@@ -54,4 +54,4 @@ def display_players_by_alphabetical_order() -> None:
     for player in sorted_players:
         table.append([player[key] for key in keys_to_print])
     print("\nVoici la liste des joueurs par ordre alphabétique :")
-    print(tabulate(table, headers=keys_to_print, tablefmt="pretty"))
+    print(tabulate(table, headers=["Prénom", "Nom", "Date de naissance", "INE"], tablefmt="pretty"))
