@@ -163,6 +163,7 @@ def display_and_verify_tournament_info(tournament_id: int) -> bool:
     except UnboundLocalError:
         return True
 
+
 def display_all_tournaments() -> None:
     """Display all tournaments from database."""
     all_tournaments = Tournament.get_all_tournaments_from_db()
@@ -178,3 +179,12 @@ def display_all_tournaments() -> None:
             maxcolwidths=[12, 12, 12, 12, 12, 12, 12, 12],
         )
     )
+
+
+def display_tournament_name_and_dates(tournament_id) -> None:
+    """Display the name and dates of a tournament."""
+    tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
+    print("\nVoici le nom et les dates du tournoi :\n")
+    print(f"Nom : {tournament['name']}")
+    print(f"Date de début : {tournament['start_time']}")
+    print(f"Date de fin : {tournament['end_time']}\n")

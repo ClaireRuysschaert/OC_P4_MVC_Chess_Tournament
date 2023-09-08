@@ -4,7 +4,6 @@ from tabulate import tabulate
 
 from controllers.player import create_player, get_players_from_alphabetic_order
 from models.player_model import Player
-from models.tournament_model import Tournament
 from utils.input_validation import validate_birthday_date_input, validate_string_input
 
 

@@ -27,11 +27,15 @@ from views.match import (  # noqa: E402
     display_match_creation_menu,
     play_matches_and_update_scores,
 )
-from views.player import display_player_creation_menu, display_players_by_alphabetical_order  # noqa: E402
+from views.player import (  # noqa: E402
+    display_player_creation_menu,
+    display_players_by_alphabetical_order,
+)
 from views.tournament import (  # noqa: E402
     create_add_players_to_tournament,
     display_all_tournaments,
     display_and_verify_tournament_info,
+    display_tournament_name_and_dates,
     get_tournament_info_from_user,
 )
 
@@ -169,6 +173,8 @@ def main_menu_display() -> None:
                 display_players_by_alphabetical_order()
             elif user_input == 2:
                 display_all_tournaments()
+            elif user_input == 3:
+                display_tournament_name_and_dates(tournament_id)
 
         # Quitter
         else:
