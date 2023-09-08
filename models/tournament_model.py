@@ -91,3 +91,10 @@ class Tournament:
         tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
         tournament["round_list"].append(round_id)
         tournaments_table.update(tournament, doc_ids=[tournament_id])
+
+    @staticmethod
+    def update_tournament_end_time(tournament_id: int) -> None:
+        """Update the end time of a tournament."""
+        tournament = Tournament.get_tournaments_infos_from_db(tournament_id)
+        tournament["end_time"] = Tournament.get_time_now()
+        tournaments_table.update(tournament, doc_ids=[tournament_id])

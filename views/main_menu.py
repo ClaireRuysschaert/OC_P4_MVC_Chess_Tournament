@@ -135,6 +135,7 @@ def main_menu_display() -> None:
                     is True
                 ):
                     print("Le tournoi est terminé !")
+                    Tournament.update_tournament_end_time(tournament_id)
 
         # 3 - Créer un joueur
         elif user_input == 3:
