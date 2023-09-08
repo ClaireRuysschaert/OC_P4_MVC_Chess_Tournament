@@ -35,6 +35,7 @@ from views.tournament import (  # noqa: E402
     create_add_players_to_tournament,
     display_all_tournaments,
     display_and_verify_tournament_info,
+    display_players_by_alphabetical_order_from_tournament,
     display_tournament_name_and_dates,
     get_tournament_info_from_user,
 )
@@ -175,6 +176,8 @@ def main_menu_display() -> None:
                 display_all_tournaments()
             elif user_input == 3:
                 display_tournament_name_and_dates(tournament_id)
+            elif user_input == 4:
+                display_players_by_alphabetical_order_from_tournament(tournament_id)
 
         # Quitter
         else:

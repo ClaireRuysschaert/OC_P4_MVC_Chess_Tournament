@@ -69,6 +69,13 @@ class Player:
         return ine_list
 
     @classmethod
+    def get_player_infos_from_db_by_ine(cls, player_ine: str) -> Dict[str, str | int]:
+        """Load the player by it's ine from the database."""
+        player_query = Query()
+        player = players_table.get(player_query.chess_national_identifier == player_ine)
+        return player
+
+    @classmethod
     def does_player_exists_in_db(cls, player_ine: str) -> bool:
         """Return True if the player exists in the database."""
         if player_ine in cls.get_all_players_ine_in_db():

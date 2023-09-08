@@ -35,3 +35,15 @@ def get_players_from_alphabetic_order() -> list[dict[str, str | int]]:
     players = Player.get_all_players_created_in_db()
     players.sort(key=lambda player: player["name"])
     return players
+
+
+def get_sorted_players_by_alphabetic_order_by_player_ine(
+    tournament_players_ine: list[str],
+) -> list[dict[str, str | int]]:
+    """Return tournament players by their ine from database in alphabetic order."""
+    players = []
+    for player_ine in tournament_players_ine:
+        player = Player.get_player_infos_from_db_by_ine(player_ine)
+        players.append(player)
+    players.sort(key=lambda player: player["name"])
+    return players

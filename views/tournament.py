@@ -1,3 +1,4 @@
+from controllers.player import get_sorted_players_by_alphabetic_order_by_player_ine
 from models.player_model import Player
 from models.tournament_model import Tournament
 from utils.input_validation import (
@@ -188,3 +189,15 @@ def display_tournament_name_and_dates(tournament_id) -> None:
     print(f"Nom : {tournament['name']}")
     print(f"Date de début : {tournament['start_time']}")
     print(f"Date de fin : {tournament['end_time']}\n")
+
+
+def display_players_by_alphabetical_order_from_tournament(tournament_id) -> None:
+    """Display all players from database in alphabetical order from tournament."""
+    tournament_players_ine = Tournament.get_tournaments_players_ine(tournament_id)
+    players = get_sorted_players_by_alphabetic_order_by_player_ine(tournament_players_ine)
+
+    table = []
+    for player in players:
+        table.append([player[key] for key in player.keys()])
+    print("\nVoici la liste des joueurs par ordre alphabétique associé au tournoi:")
+    print(tabulate(table, list(players[0].keys()), tablefmt="pretty"))
