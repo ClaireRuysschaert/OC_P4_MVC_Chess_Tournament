@@ -24,7 +24,7 @@ Windows:
 Lancez la commande ci-dessous:
 (Pensez à vérifier que vous avez bien activé votre environnement virtuel.)
 
-`python views/main_menu.py`
+`python run.py`
 
 ## Utilisation
 Le menu principal est divisé en 4 fonctionnalités.
